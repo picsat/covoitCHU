@@ -1,0 +1,21 @@
+{% extends 'templates/app.twig' %}
+
+{% block content %}
+    <div class="content">
+        {% if auth.check %}
+
+            <div class="card">
+              <div class="card-body">
+                <h2 class="card-title">Calendrier de {{ user.nom }} {{ user.prenom }} </h2>
+                <p>Derniere Maj le : {{auth.user.last_update}} </p>
+                <pre>
+                {{ dump(user)  }}
+                </pre>
+              </div>
+            </div>
+
+        {% else %}
+
+        {% endif %}
+    </div>
+{% endblock %}

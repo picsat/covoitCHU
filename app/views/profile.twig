@@ -1,0 +1,38 @@
+
+
+{% block body %}
+<h1>User List</h1>
+
+
+<dl>
+    <!--  <li><a href="{{ path_for('profiler', { 'name': name }) }}">{{name}}</a></li> -->
+
+
+
+
+    {% for user in data %}
+    <dt><a href="{{ path_for('detail', {id:user.id}, {'nom' : user.nom}) }}"> {{ user.nom|capitalize }} {{ user.prenom }}</a></dt>
+    <dd class="service"><label>Service :</label> {{ user.service }}</dd>
+    <dd class="ville"><label>Ville:</label> {{ user.ville }}</dd>
+    <dd class="email"><label>Email :</label> {{ user.email }}</dd>
+    <dd class="phone"><label>Téléphone :</label> {{  user.tel }}</dd>
+    <dd class="gsm"><label>Portable :</label> {{ user.gsm }}</dd>
+    {% else %}
+    {%set user = data %}
+        {%if user %}
+        <h2>fiche perso</h2>
+        <dt>{{ user.nom|capitalize }} {{ user.prenom }}</dt>
+        <dd class="service"><label>Service :</label> {{ user.service }}</dd>
+        <dd class="ville"><label>Ville:</label> {{ user.ville }}</dd>
+        <dd class="email"><label>Email :</label> {{ user.email }}</dd>
+        <dd class="phone"><label>Téléphone :</label> {{  user.tel }}</dd>
+        <dd class="gsm"><label>Portable :</label> {{ user.gsm }}</dd>
+        {% else%}
+            There are no users here :(
+        {% endif %}
+
+  {% endfor %}
+</dl>
+
+><a href="{{ path_for('profiler') }}">Retour</a>
+{% endblock %}

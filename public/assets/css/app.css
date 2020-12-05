@@ -1,0 +1,25 @@
+body .container {
+    padding-top: 80px;
+    padding-bottom: 40px;
+}
+
+
+nav a.delete_account {
+    color: #dc3545;
+}
+
+nav a.delete_account:hover {
+    color:#FFF;
+    background-color: #dc3545;
+}
+
+.content {
+    margin: 0 auto;
+    max-width: 100%;
+}
+
+.title {
+    padding-top: 30%;
+    text-align: center;
+    font-size: 96px;
+}
