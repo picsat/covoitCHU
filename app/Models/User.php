@@ -90,4 +90,14 @@ class User extends Model
             'email' => $this->getEmail(),
         ];
     }
+
+    public function events()
+    {
+        //return $this->hasMany('App\Models\Event', 'id_user');
+
+        return $this->hasMany('App\Models\Event', 'id_user')
+        ->join('type_event', 'events.id_type',  '=', 'type_event.id')
+        ->select('events.*', 'type_event.titre as titre_event');
+    }
+
 }

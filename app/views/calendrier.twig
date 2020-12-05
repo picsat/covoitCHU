@@ -9,7 +9,7 @@
                 <h2 class="card-title">Calendrier de {{ user.nom }} {{ user.prenom }} </h2>
                 <p>Derniere Maj le : {{auth.user.last_update}} </p>
                 <pre>
-                {{ dump(user)  }}
+                {{ dump(user.events)  }}
                 </pre>
               </div>
             </div>
