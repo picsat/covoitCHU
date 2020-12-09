@@ -40,6 +40,8 @@ return function (App $app) {
     };
 
 
+
+
     /* TWIG */
     $container['view'] = function ($c) {
         $settings = $c->get('settings');
@@ -48,6 +50,7 @@ return function (App $app) {
         // Ajout d'extensions
         $view->addExtension(new Slim\Views\TwigExtension($c->get('router'), $c->get('request')->getUri()));
         $view->addExtension(new Twig_Extension_Debug());
+
 
         // Variables Twig globales
         $twig = $view->getEnvironment();
@@ -87,14 +90,17 @@ return function (App $app) {
         return new \App\Controllers\Auth\PasswordController($container);
     };
 
+    $container['csrf'] = function($container) {
+        $guard= new \Slim\Csrf\Guard;
+        $guard->setPersistentTokenMode(true);
+        return $guard;
+    };
 
     $container['CalendarController'] = function($container) {
         return new \App\Controllers\Calendar\CalendarController($container);
     };
 
-    $container['csrf'] = function($container) {
-        return new \Slim\Csrf\Guard;
-    };
+
 
 /// .............................??????????????????????????????????????????
     $container['UserController'] = function ($c) {

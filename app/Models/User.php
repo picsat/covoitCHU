@@ -91,6 +91,18 @@ class User extends Model
         ];
     }
 
+    public function macaron() : string
+    {
+        $nom_initiale = ''; // déclare le recipient
+        $n_mot = explode(" ",$this->prenom.' '.$this->nom);
+        foreach($n_mot as $lettre)
+        {
+            $nom_initiale .= $lettre{0}.'.';
+        }
+        return strtoupper(substr($nom_initiale, 0, -1));
+    }
+
+
     public function events()
     {
         //return $this->hasMany('App\Models\Event', 'id_user');

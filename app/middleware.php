@@ -14,4 +14,7 @@ return function (App $app) {
     $app->add($container->csrf);
 
     v::with('App\\Validation\\Rules\\');
+
+
+
 };

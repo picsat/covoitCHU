@@ -2,20 +2,74 @@
 
 {% block content %}
     <div class="content">
-        {% if auth.check %}
 
+        {% if auth.check %}
             <div class="card">
               <div class="card-body">
-                <h2 class="card-title">Calendrier de {{ user.nom }} {{ user.prenom }} </h2>
-                <p>Derniere Maj le : {{auth.user.last_update}} </p>
-                <pre>
-                {{ dump(user.events)  }}
-                </pre>
+                <form id="getCalendar"  name="getCalendar" method="post" action="{{ path_for('calendar.update') }}">
+                    nb semaines : {{calendrier.getWeeks()}}
+                    <div class="calendrier col-lg-10 col-sm-12 offset-lg-1 mh-75 {{ 'nb_weeks_' ~ calendrier.getWeeks() }}">
+                        <header>
+                            <h2 class="mb-4 text-center">Calendrier de {{ user.nom }} {{ user.prenom }} : {{ calendrier.toString() }}</h2>
+                            <div class="row d-none d-sm-flex p-1 bg-dark text-white">
+                                {% for k, day in calendrier.days %}
+                                <h3 class="col-sm p-1 text-center">{{ day }}</h3>
+                                {% endfor %}
+                            </div>
+                        </header>
+
+                        <div class="row border border-right-0 border-bottom-0">
+                            {% for w, week in 0..calendrier.getWeeks()-1 %}
+                                {% for k, day in calendrier.days %}
+                                    {% set date = calendrier.getday(loop.parent.w,k) %}
+                                    <div class="day col-sm p-2 border border-left-0 border-top-0 text-truncate {{ (date|date("d/m/Y") is same as (calendrier.date_today)) ? "today text-white" : "" }}  {{ calendrier.withinMonth(date)  ? '' : 'bg-light text-muted' }}"> <!-- d-none d-sm-inline-block bg-light text-muted -->
+                                      <h5 class="row align-items-center">
+                                        <span class="date col-1">{{ date|date("d") }}</span>
+                                        <span class="col-1"></span>
+                                        <small class="col d-sm-none text-center text-muted">{{ day }}</small>
+                                      </h5>
+                                      {# <p> s{{ loop.parent.w  }} - d{{k}}</p> #}
+                                        {% if calendrier.withinMonth(date) %}
+                                            {% if (user_events[date|date("Ymd")] is defined) %}
+                                                <a class="event d-block p-1 pl-2 pr-2 mb-1 rounded text-truncate small bg-info text-white" title="Test Event 1">
+                                                    <span class="badge badge-light">{{user_events[date|date("Ymd")].user_initiales}}</span>
+                                                    {{user_events[date|date("Ymd")].translated_eventType}}
+                                                    <select name="sj{{ date|date("d") }}" id="sj{{ date|date("Ymd") }}" class="type_event form-control form-control-sm">
+                                                        <option value=""></option>
+                                                        {% for l,type in liste_type_event %}
+                                                        <option value="{{ l }}" {% if l is same as(user_events[date|date("Ymd")].eventType_id) %} selected="selected" {% endif %}> {{ type.titre }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </a>
+                                            {% else %}
+                                                <select name="sj{{ date|date("d") }}" id="sj{{ date|date("Ymd") }}" class="type_event form-control form-control-sm">
+                                                    <option value=""></option>
+                                                    {% for l,type in liste_type_event %}
+                                                    <option value="{{ l }}"> {{ type.titre }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                                <p class="d-sm-none">No events</p>
+                                            {% endif %}
+                                        {% endif %}
+                                    </div>
+                                {% endfor %}
+                                <div class="w-100"></div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <button class="btn btn-dark btn-sm" type="submit">Mettre à jour</button>
+                    {{ csrf.field | raw }}
+                    <input type="hidden" name="selMois" id="selMois" value="{{ calendrier.month }}">
+                    <input type="hidden" name="selAnnee" id="selAnnee" value="{{ calendrier.year }}">
+                </form>
               </div>
             </div>
 
         {% else %}
 
         {% endif %}
+
+       {#  <pre>{{dump(liste_type_event)}}</pre> #}
+         <pre>{{dump(user_events)}}</pre>
     </div>
 {% endblock %}

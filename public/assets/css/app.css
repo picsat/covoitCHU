@@ -1,5 +1,5 @@
-body .container {
-    padding-top: 80px;
+body .container, body .container-fluid {
+    padding-top: 20px;
     padding-bottom: 40px;
 }
 
@@ -23,3 +23,48 @@ nav a.delete_account:hover {
     text-align: center;
     font-size: 96px;
 }
+
+#getCalendar .form-group {
+    margin-bottom: 0.2rem;
+}
+
+.calendrier h3 { font-size: 1rem; }
+.calendrier .day.today {
+    background-color: #a3cfd6!important;
+}
+.calendrier .day.today .date {
+    color:;
+}
+
+.calendrier .text-muted {
+    color: #c7c7c7!important;
+}
+
+
+@media (max-width:575px) {
+
+  .calendrier .day h5 {
+        background-color: #f8f9fa;
+        padding: 3px 5px 5px;
+        margin: -8px -8px 8px -8px;
+    }
+  .calendrier  .date {
+        padding-left: 4px;
+    }
+}
+
+@media (min-width: 576px) {
+    .calendrier {
+
+    }
+    .calendrier .day {
+        height: 14vw;
+        max-height: 14vh;
+    }
+
+    .calendrier.nb_weeks_6 .day {
+        height: 12vw;
+        max-height: 12vh;
+    }
+}
+
