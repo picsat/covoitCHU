@@ -8,6 +8,7 @@ $container = $app->getContainer();
 
 $app->group('', function () use ($app){
 
+        $this->get('/calendrier[/{month}-{year}]', 'CalendarController:getcontent')->setName('calendar.general');
         $this->post('/calendrier', 'CalendarController:getcontent')->setName('calendar.general');
         $this->post('/calendrier/update', 'CalendarController:update')->setName('calendar.update');
 

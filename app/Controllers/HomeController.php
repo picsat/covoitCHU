@@ -3,6 +3,9 @@
 namespace App\Controllers;
 
 use App\Models\User;
+use App\Auth\Auth;
+use App\Controllers\Controller;
+use Illuminate\Database\Capsule\Manager as DB;
 
 /**
  * HomeController
@@ -29,6 +32,24 @@ class HomeController extends Controller
             $year_listing[$current_year+$number] = $current_year+$number;
         }
 
+
+
+        /**
+         * Recup du user session auhtentifié
+         */
+
+        $user = $this->auth->user();
+        if($user){
+
+        $user->setPrenom($user->prenom);
+        $user->setNom($user->nom);
+        $user->setEmail($user->email);
+        $args['user'] = $user;
+        }
+
+
+
+
         $args['form_calendar']= [
                                     "current_month"=>$current_month,
                                     "current_year" =>$current_year,
@@ -36,6 +57,6 @@ class HomeController extends Controller
                                     "year_listing"=> $year_listing,
                                 ];
 
-        return $this->view->render($response,'home.twig', $args);
+        return $this->view->render($response,'home.twig', $args );
     }
 }

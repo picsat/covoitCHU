@@ -34,12 +34,14 @@ class User extends Model
         'password',
     ];
 
-     /*public function __construct($nom, $prenom, $email) // Constructeur demandant les paramètres
+    /*
+    public function __construct($nom=null, $prenom=null, $email=null) // Constructeur demandant les paramètres
     {
-        $this->setNom($nom); // Initialisation du Nom.
+        $this->setNom($this->nom); // Initialisation du Nom.
         $this->setPrenom($prenom); // Initialisation du Prenom.
         $this->setEmail($email); // Initialisation du mail.
-    }*/
+    }
+    */
 
     public function setPassword($password)
     {
@@ -80,7 +82,12 @@ class User extends Model
 
     public function getFullNom()
     {
-        return "$this->prenom +++ $this->nom +++ $this->email";
+        return "$this->prenom $this->nom";
+    }
+
+    public function getColor()
+    {
+        return "$this->color";
     }
 
     public function getEmailVariables()
@@ -111,5 +118,6 @@ class User extends Model
         ->join('type_event', 'events.id_type',  '=', 'type_event.id')
         ->select('events.*', 'type_event.titre as titre_event');
     }
+
 
 }

@@ -18,6 +18,19 @@ class AuthMiddleware extends Middleware
             return $response->withRedirect($this->container->router->pathFor('auth.signin'));
         }
 
+        /**
+         * Recupere le user de la session en cours
+         * -> Pour donner le user aux controllers qui en auront besoin si la route est protégée par ce Middleware
+         */
+        $user = new \App\Auth\Auth;
+        $user = $user->user();
+
+        $user->setPrenom($user->prenom);
+        $user->setNom($user->nom);
+        $user->setEmail($user->email);
+
+        $this->container->user = $user;
+
         $response = $next($request, $response);
         return $response;
     }

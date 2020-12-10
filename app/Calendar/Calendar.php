@@ -19,11 +19,26 @@ class Calendar
     public $months = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
     public $days = ['Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi','Dimanche'];
 
+   // public $user; // comme ca on a tout le temps au moins le user ?? a voir si on garde ou pas
 
     public function __construct($month = null, $year = null)
     {
+        /*
+        // on recupere le user de la session en cours
+        $user = new \App\Auth\Auth;
+        $user = $user->user();
 
-        if($month === null){
+        if (! $user) {
+            throw new \Exception("Le calendrier ne peut etre affiché car vouc n'êtes pas connecté !");
+            return false;
+        }
+        $user->setPrenom($user->prenom);
+        $user->setNom($user->nom);
+        $user->setEmail($user->email);
+
+        $this->user = $user;
+    */
+        if($month === null || $month < 1 || $month > 12){
             $month = intval(date('m'));
         }
 
@@ -34,7 +49,7 @@ class Calendar
         /*if($month < 1 || $month > 12){
             throw new \Exception("Le mois $month n'est pas valide");
         }*/
-
+/*
         if($month < 1) {
             $month = 12;
         }
@@ -45,7 +60,7 @@ class Calendar
 
         if($year < 1970 ){
             throw new \Exception("L'année $year doit etre > 1970");
-        }
+        }*/
 
         foreach (range(1, 12) as $number) {
             $month_listing[$number] = $this->listingMonth[$number-1];
@@ -88,7 +103,7 @@ class Calendar
     /**
      * Renvoie le nombre de semaine
      */
-    public function getWeeks()
+    public function getWeeks() : int
     {
         $start = $this->getFirstDay();
         $end = $this->getLastDay();
@@ -131,6 +146,32 @@ class Calendar
     {
 
         return $this->getFirstDay()->format('Y-m') === $date->format('Y-m');
+    }
+
+    public function nextMonth() : Calendar
+    {
+
+        $month = $this->month + 1;
+        $year = $this->year;
+
+        if($month > 12) {
+            $month = 1;
+            $year += 1;
+        }
+        return new Calendar($month, $year);
+    }
+
+    public function previousMonth() : Calendar
+    {
+
+        $month = $this->month - 1;
+        $year = $this->year;
+
+        if($month < 1) {
+            $month = 12;
+            $year -= 1;
+        }
+        return new Calendar($month, $year);
     }
 
 

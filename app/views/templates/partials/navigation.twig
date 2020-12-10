@@ -13,7 +13,7 @@
     <ul class="navbar-nav">
     {% if auth.check %}
         <li class="nav-item dropdown">
-          <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ auth.user.nom }} <span class="caret"></span></a>
+          <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="user_macaron" style="background-color:{{ user.getColor() }};">{{ user.macaron() }}</span><span>{{user.getFullNom()}}</span> <span class="caret"></span></a>
           <ul class="dropdown-menu dropdown-menu-right">
             <li><a class="dropdown-item" href="{{ path_for('auth.password.change') }}">Change Password</a></li>
             <li><a class="dropdown-item" href="{{ path_for('auth.signout') }}">Sign Out</a></li>

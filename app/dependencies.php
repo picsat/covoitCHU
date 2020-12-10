@@ -42,33 +42,6 @@ return function (App $app) {
 
 
 
-    /* TWIG */
-    $container['view'] = function ($c) {
-        $settings = $c->get('settings');
-        $view = new \Slim\Views\Twig($settings['view']['template_path'], $settings['view']['twig']);
-
-        // Ajout d'extensions
-        $view->addExtension(new Slim\Views\TwigExtension($c->get('router'), $c->get('request')->getUri()));
-        $view->addExtension(new Twig_Extension_Debug());
-
-
-        // Variables Twig globales
-        $twig = $view->getEnvironment();
-        $twig->addGlobal('application', [
-                            'appId' => $settings['appli'],
-                            'name' => $settings['appNom'],
-                            'version' => $settings['version'],
-                            'author' => $settings['createur'],
-                        ]);
-        $twig->addGlobal('auth', [
-                            'check' => $c->auth->check(),
-                            'user' => $c->auth->user()
-                        ]);
-        $twig->addGlobal('flash', $c->flash);
-
-        return $view;
-    };
-
 
     // --------------------
     // Service factories
@@ -110,6 +83,34 @@ return function (App $app) {
     };
 
 
+
+    /* TWIG */
+    $container['view'] = function ($c) {
+        $settings = $c->get('settings');
+        $view = new \Slim\Views\Twig($settings['view']['template_path'], $settings['view']['twig']);
+
+        // Ajout d'extensions
+        $view->addExtension(new Slim\Views\TwigExtension($c->get('router'), $c->get('request')->getUri()));
+        $view->addExtension(new Twig_Extension_Debug());
+
+
+        // Variables Twig globales
+        $twig = $view->getEnvironment();
+        $twig->addGlobal('application', [
+                            'appId' => $settings['appli'],
+                            'name' => $settings['appNom'],
+                            'version' => $settings['version'],
+                            'author' => $settings['createur'],
+                        ]);
+        $twig->addGlobal('auth', [
+                            'check' => $c->auth->check(),
+                            'user' => $c->auth->user()
+                        ]);
+        //$twig->addGlobal('toto', $c->get(toto));
+        $twig->addGlobal('flash', $c->flash);
+
+        return $view;
+    };
 
 
 
