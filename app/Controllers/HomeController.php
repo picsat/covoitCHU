@@ -41,14 +41,12 @@ class HomeController extends Controller
         $user = $this->auth->user();
         if($user){
 
-        $user->setPrenom($user->prenom);
-        $user->setNom($user->nom);
-        $user->setEmail($user->email);
-        $args['user'] = $user;
+
+            $args['user'] = $user;
         }
 
-
-
+        $pwd = password_hash('123123', PASSWORD_DEFAULT);
+        $args['pwd'] = $pwd;
 
         $args['form_calendar']= [
                                     "current_month"=>$current_month,

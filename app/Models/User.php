@@ -22,15 +22,17 @@ class User extends Model
     const CREATED_AT = 'creation_date';
     const UPDATED_AT = 'last_update';
 
-    protected $prenom;
-    protected $nom;
-    protected $email;
+
 
     protected $fillable = [
         'email',
         'nom',
         'prenom',
         'ville',
+        'color',
+        'service',
+        'tel',
+        'gsm',
         'password',
     ];
 
@@ -87,15 +89,20 @@ class User extends Model
 
     public function getColor()
     {
-        return "$this->color";
+        return $this->color;
     }
 
     public function getEmailVariables()
     {
         return [
-            'full_name' => $this->getFullName(),
+            'full_name' => $this->getFullNom(),
             'email' => $this->getEmail(),
         ];
+    }
+
+    public function userToArray()
+    {
+        return $this->toArray();
     }
 
     public function macaron() : string

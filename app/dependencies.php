@@ -76,9 +76,9 @@ return function (App $app) {
 
 
 /// .............................??????????????????????????????????????????
-    $container['UserController'] = function ($c) {
+    $container['UserController'] = function ($container) {
 
-        $view = new \App\Controllers\UserController($c->get('view'), $c->get('logger'), $c->get('settings'));
+        $view = new \App\Controllers\UserController($container);
         return $view ;
     };
 

@@ -60,7 +60,7 @@ class CalendarController extends Controller
          * renvoie un tableau d'event contenant les events et les info users si besoin
          */
 
-        $user = $this->user;
+        $user = $this->auth->user();
 
         $user_events = array();
 
@@ -146,7 +146,7 @@ class CalendarController extends Controller
         $month = $postArr['selMois'];
         $year = $postArr['selAnnee'];
 
-        $user = $this->user;
+        $user = $this->auth->user();
             // put log message
             $this->logger->info("**** SAVE CALENDAR **** : $month/$year pour $user->nom $user->prenom {\"id\":\"$user->id\"}");
 
@@ -188,6 +188,7 @@ class CalendarController extends Controller
         ksort($user_events);
 
         $updateForm['db'] = $user_events;
+
 
 
 
@@ -304,7 +305,6 @@ class CalendarController extends Controller
 
                 }
             }
-
             // -- *** CREATE *** si on a des create, c'est qu'on avait PAS ces events en DB sur ce mois
             if(count($updateForm['submited']['toCreate']) > 0)
             {

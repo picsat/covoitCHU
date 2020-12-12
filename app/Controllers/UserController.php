@@ -6,27 +6,16 @@
 
 namespace App\Controllers;
 use App\Models\User;
+use App\Auth\Auth;
 
 use Slim\Http\Request;
 use Slim\Http\Response;
-use Slim\Views\Twig;
-use Psr\Log\LoggerInterface;
+
 
 
 class UserController extends Controller
 {
 
-    protected $logger;
-    protected $view;
-
-    public function __construct(Twig $view, LoggerInterface $logger)
-    {
-        $this->view = $view;
-        $this->logger = $logger;
-
-        // put log message
-        $this->logger->info("'/users' route");
-    }
 
     public function allUsers(Request $request, Response $response, array $arg)
     {
@@ -44,25 +33,30 @@ class UserController extends Controller
 
     }
 
-    public function deleteUser(Request $request, Response $response, array $arg)
+    public function deleteUser(Request $request, Response $response, array $args)
     {
 
+        $user_id = $args['id'];
+        $user =  User::find($user_id ? $user_id : 0);
 
+        $this->logger->info("Deleting User {\"id\" : \"$user_id\"}");
 
-        $user =  User::find(isset($_SESSION['user']) ? $_SESSION['user'] : 0);
+        $data = User::destroy($user_id);
+        if($data)
+        {
+            $this->flash->addMessage('error', 'Vous venez de supprimer le compte '. $user->nom . ' '. $user->prenom . ' (' . $user->email .')' );
+            $this->auth->logout();
+            unset($_SESSION['user']);
 
-        $this->logger->info("deleting user");
+            return $response->withRedirect($this->router->pathFor('home'));
+        }
 
-        $data = User::destroy($user['id']);
-
-        //$this->flash->addMessage('error', 'Kill user '. $user['email']);
-
-        unset($_SESSION['user']);
-
-        return $this->view->render($response, 'home.twig');
-        //return $response->withRedirect($this->router->pathFor('home'));
+        //return $this->view->render($response, 'home.twig');
+        return $response->withRedirect($this->router->pathFor('home'));
 
 
 
     }
+
+
 }

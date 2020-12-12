@@ -107,10 +107,23 @@ class Calendar
     {
         $start = $this->getFirstDay();
         $end = $this->getLastDay();
-        // var_dump($start,$end);
-        $weeks =  intval($end->format('W')) - intval($start->format('W')) + 1;
+        $startWeek = intval($start->format('W'));
+        $endWeek = intval($end->format('W'));
 
-        if($weeks < 0) {
+        if($endWeek === 1)
+        {
+            $endWeek = intval($end->modify('- 7 days')->format('W')) + 1;
+        }
+
+        if($startWeek > 52)
+        {
+            $startWeek = intval($start->modify('+ 7 days')->format('W')) - 1;
+        }
+
+        $weeks =   $endWeek - $startWeek + 1;
+
+        if($weeks < 0)
+        {
             $weeks = intval($end->format('W'));
         }
 
