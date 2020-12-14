@@ -123,9 +123,125 @@ class CalendarController extends Controller
 
 
 
-        return $this->view->render($response,'calendrier.twig', [
+        return $this->view->render($response,'calendar/calendrier.twig', [
                                                                     "data"=> $postArr,
                                                                     "user" => $user,
+                                                                    "user_events" => $user_events,
+                                                                    "calendrier" => $calendrier,
+                                                                    "liste_type_event" => $liste_type_event,
+                                                                    "month" => $month,
+                                                                    "year" => $year,
+
+                                                                ]);
+
+
+    }
+
+    /**
+     * Checher les Events de tous les User pour le calendrier en cours (readOnly)
+     */
+    public function getcontentForAll($request, $response, array $args)
+    {
+
+        $GETmonth = $args['month'];
+        $GETyear = $args['year'];
+
+         //recup des dates passée en POST
+        $postArr = $request->getParsedBody();
+        $POSTmonth = $postArr['selMois'];
+        $POSTyear = $postArr['selAnnee'];
+
+        if ($POSTmonth != null && $POSTyear != null) {
+            $calendrier = new Calendar($POSTmonth, $POSTyear);
+        }
+        else if($GETmonth != null && $GETyear !=null ){
+            $calendrier = new Calendar($GETmonth, $GETyear);
+        }
+        else {
+            $month = date("m");
+            $year = date("Y");
+            $calendrier = new Calendar($month, $year);
+           // throw new \Exception("calendrier no possiblo !");
+        }
+
+
+        /**
+         * Recupération des event du mois du calendrier en cours pour le user indentifié
+         * renvoie un tableau d'event contenant les events et les info users si besoin
+         */
+        $users = User::all();
+        $activeUser = $this->auth->user();
+
+        // On recupère la liste des types qui alimente les <select> du tpl
+        $RecupListeTypeEvent = new \App\Models\Event;
+        $EventTypes = json_decode($RecupListeTypeEvent->getAllEventType());
+
+        // On part du principe que c'est a partir des Events du mois/annee en cours qu'il faut aller chercher les relations (User / type_event...)
+        // renvoi un tableau d'Events
+        $firstDayMonth = $calendrier->getFirstDay()->format('Y-m-d H:i:s');
+        $lastDayMonth = $calendrier->getLastDay()->format('Y-m-d H:i:s');
+
+        foreach ($EventTypes as $type) {
+             $liste_type_event[$type->id] = [
+                                                "titre"=> $type->titre,
+                                                "description"=> $type->description,
+                                            ];
+        }
+
+        $user_events = array();
+
+        foreach ($users as $u => $user) {
+
+            $user_events[$user->id] = $user->toArray(); //infos User
+            $user_events[$user->id]["is_active"] = ($user[id] === $activeUser->id) ? true : false;
+
+            $userEvents = \App\Models\Event::with('user')->where('id_user','=',$user->id)->whereBetween('date', [$firstDayMonth, $lastDayMonth])->get();
+
+
+            // Retourner un tableau d'events
+            // @sj = $key = date event sous la forme array[AAAAMMJJ]
+            foreach ($userEvents as $event) {
+
+                $sj = date("Ymd", strtotime($event->date));
+
+                $voitureBoolean = ($event->voiture) ? true : false;
+
+                $user_events[$user->id][$sj] =  [
+                                            "id" => $event->id,
+                                            "date" => $event->date,
+                                            "translated_date" => date("d/m/Y", strtotime($event->date)),
+                                            "literal_date" => $calendrier->days[date("N", strtotime($event->date))] . ' ' . date("d", strtotime($event->date)) .' '. $calendrier->toString(),
+                                            "voiture" => $voitureBoolean,
+                                            "user_id" => $event->id_user,
+                                            "user_initiales" => $user->macaron(),
+                                            "eventType_id" => $event->id_type,
+                                            "translated_eventType" => $liste_type_event[$event->id_type]['titre'],
+                ];
+            }
+
+            ksort($user_events[$user->id]);
+
+        }
+
+
+
+        /* Function de comparaison rapide  pour trier le tableu de users par Nom */
+        function cmpNom($a, $b)
+        {
+            return strcmp($a["nom"], $b["nom"]);
+        }
+        usort($user_events, '\App\Controllers\Calendar\cmpNom'); // -- pour la mode
+
+        /*var_dump($user_events);
+        die;*/
+
+
+
+
+
+        return $this->view->render($response,'calendar/flatcal.twig', [
+                                                                    "data"=> $postArr,
+                                                                    "user" => $activeUser,
                                                                     "user_events" => $user_events,
                                                                     "calendrier" => $calendrier,
                                                                     "liste_type_event" => $liste_type_event,

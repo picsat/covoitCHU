@@ -33,13 +33,40 @@
                                             </select>
                                         </div>
                                         <div class="form-group col-md-2">
-                                            <button class="btn btn-dark btn-sm" type="submit">Mettre à jour</button>
+                                            <button class="btn btn-dark btn-sm" type="submit"><i class="far fa-calendar-alt fa-lg"></i>&nbsp;Mettre à jour</button>
                                         </div>
                                     </div>
                                     {{ csrf.field | raw }}
                                </form>
                         </div>
-                        <a class="list-group-item list-group-item-action" href="#">Voir le calendrier Global</a>
+                        <div class="list-group-item list-group-item-action" href="#">
+
+
+                                <form id="getCalendarfoAll" name="getCalendarfoAll" method="post" action="{{ path_for('calendar.forall') }}">
+                                    <div class="form-row">
+                                        <div class="form-group col-md-6"><label>Voir le calendrier Global</label></div>
+                                        <div class="form-group col-md-2">
+
+                                            <select name="selMois" id="selMois" class="form-control form-control-sm ">
+                                                {% for key,mois in form_calendar.month_listing %}
+                                                <option value="{{ key }}" {% if key is same as(form_calendar.current_month) %} selected="selected" {% endif %}> {{ mois }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                       <div class="form-group col-md-2">
+                                            <select name="selAnnee" id="selAnnee" class="form-control  form-control-sm">
+                                                {% for key,annee in form_calendar.year_listing %}
+                                                <option value="{{ key }}" {% if key is same as(form_calendar.current_year) %} selected="selected" {% endif %}> {{ annee }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                        <div class="form-group col-md-2">
+                                            <button class="btn btn-dark btn-sm" type="submit"><i class="far fa-calendar-check fa-lg" aria-hidden="true"></i>&nbsp;Voir</button>
+                                        </div>
+                                    </div>
+                                    {{ csrf.field | raw }}
+                               </form>
+                        </div>
                         <button type="button" class="list-group-item list-group-item-action list-group-item-danger" disabled action="{{ path_for('user.detroy') }}{{auth.user.id}}"><i class="fas fa-trash"></i> Supprimer ce compte</button>
                     </div>
                 </div>
