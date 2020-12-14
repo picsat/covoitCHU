@@ -10,7 +10,7 @@
                         <div class="d-flex flex-row align-items-center justify-content-between col-sm3">
                         {# nb semaines : {{calendrier.getWeeks()}} #}
                             <h2 class="mb-4 text-center card-title">{{ user.getFullNom() }} : {{ calendrier.toString() }}</h2>
-                            <div>
+                            <div class="navigation">
                                 <a href="{{  path_for('calendar.general', { 'month': calendrier.previousMonth().month , 'year': calendrier.previousMonth().year})  }}" class="btn btn-primary" >&lt;</a>
                                 <a href="{{  path_for('calendar.general', { 'month': calendrier.nextMonth().month , 'year': calendrier.nextMonth().year})  }}" class="btn btn-primary" >&gt;</a>
                             </div>
@@ -76,8 +76,12 @@
                                 <div class="w-100"></div>
                             {% endfor %}
                         </div>
+                        <div class="row mt-2">
+                            <div class="col-lg-12">
+                                <button class="btn btn-dark btn-sm float-right" type="submit">Mettre à jour</button>
+                            </div>
+                        </div>
                     </div>
-                    <button class="btn btn-dark btn-sm" type="submit">Mettre à jour</button>
                     {{ csrf.field | raw }}
                     <input type="hidden" name="selMois" id="selMois" value="{{ calendrier.month }}">
                     <input type="hidden" name="selAnnee" id="selAnnee" value="{{ calendrier.year }}">
@@ -92,27 +96,20 @@
        {#  <pre>{{dump(liste_type_event)}}</pre> #}
          {# <pre>{{dump(user_events)}}</pre>
           #}
-          <pre>{{ dump(data)}}</pre>
+          {# <pre>{{ dump(data)}}</pre> #}
     </div>
 
     <script>
-
     $(document).ready(function()
     {
         $(".opt_voiture.checkbox").on("change", function()
         {
             var checked = $(this).prop("checked");
 
-            $(this).closest(".input-group-append").find(".input-group-text").toggleClass('checked-success');
-            if(($(this).is(":checked")) && (!$(this).closest('.input-group').find('select.type_event').val())){
-                //.prop("checked", checked);
-                $(this).closest('.input-group').find('select.type_event').attr('required',"required");
-            }
-            if((!$(this).is(":checked")) && (!$(this).closest('.input-group').find('select.type_event').val())){
-                //.prop("checked", checked);
-                $(this).closest('.input-group').find('select.type_event').attr('required', false);
-            }
+            check_verif($(this));
         });
+
+
 
         $("select.type_event").each(function(){
 
@@ -146,16 +143,20 @@
             });
         });
 
-        $('form#ge tCalendar').submit(function (e) {
-            // prevent the page from submitting like normal
+        // UPSATE du calendrier en Ajax si on navigue sans avori submit :)
+        $(".navigation a").on("click", function(e){
             e.preventDefault();
+            e.stopPropagation();
+            var href = $(this).attr("href");
+
 
             $.ajax({
-                url: '{{ path_for('calendar.update') }}',
+                url: "{{ path_for('calendar.update') }}",
                 type: 'POST',
-                data: $(this).serialize(),
+                data: $('form#getCalendar').serialize(),
                 success: function (response) {
-                    console.log('it worked!'+ response);
+                    console.log('it worked!'+ response );
+                    window.location.href = href;
                 },
                 error: function(xhr, status, error) {
                     var err = xhr.responseText;
@@ -164,6 +165,21 @@
             });
         });
 
+
     });
+
+    function check_verif(cb) {
+        cb.closest(".input-group-append").find(".input-group-text").toggleClass('checked-success');
+        if((cb.is(":checked")) && (!cb.closest('.input-group').find('select.type_event').val())){
+            //.prop("checked", checked);
+            cb.closest('.input-group').find('select.type_event').attr('required',"required");
+            return false;
+        }
+        if((!cb.is(":checked")) && (!cb.closest('.input-group').find('select.type_event').val())){
+            //.prop("checked", checked);
+            cb.closest('.input-group').find('select.type_event').attr('required', false);
+        }
+        return true;
+    };
     </script>
 {% endblock %}

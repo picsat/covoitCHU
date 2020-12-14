@@ -254,9 +254,11 @@ class CalendarController extends Controller
         }
         ksort($updateForm);
 
+        // Traitements
+        if(count($updateForm['submited']) > 0)
+        {
+            $retour = array();
 
-       if(count($updateForm['submited']) > 0)
-       {
             // -- *** UPDATE *** si on a des update, c'est qu'on a des events en DB sur ce mois
             if((count($updateForm['submited']['toUpdate']) > 0) && (count($updateForm['db']) > 0))
             {
@@ -285,7 +287,7 @@ class CalendarController extends Controller
                     }
                 }
 
-                ($count_eventUpdate > 0) ? $this->flash->addMessage('warning', 'Certains events existants ('. $count_eventUpdate .') ont été modifiés') : "";
+                ($count_eventUpdate > 0) ? $retour['warning'] .= ('<strong>('. $count_eventUpdate .')</strong> ont été modifiés') : "";
             }
 
             // -- *** DELETE *** si on a des delete, c'est qu'on a des events en DB sur ce mois
@@ -304,12 +306,14 @@ class CalendarController extends Controller
                         $this->logger->info($message);
 
                 }
+
+                (count($eventDelete) > 0) ? $retour['error'] .= ('<strong>('. count($eventDelete) .')</strong> ont été supprimés') : "";
             }
             // -- *** CREATE *** si on a des create, c'est qu'on avait PAS ces events en DB sur ce mois
             if(count($updateForm['submited']['toCreate']) > 0)
             {
-                $eventDelete = $updateForm['submited']['toCreate'];
-                foreach ($eventDelete as $e => $event) {
+                $eventCreate = $updateForm['submited']['toCreate'];
+                foreach ($eventCreate as $e => $event) {
                     // On creer l'event
                     $message = "";
 
@@ -333,51 +337,29 @@ class CalendarController extends Controller
                         $this->logger->info($message);
 
                 }
+                (count($eventCreate) > 0) ? $retour['success'] .= ('<strong>('. count($eventCreate) .')</strong> ont été insérés') : "";
             }
 
 
+            // Message Flash de retours sur le CRUD
+            if( $count_eventUpdate > 0 || (count($updateForm['submited']['toCreate']) > 0) || (count($updateForm['submited']['toDelete']) > 0))
+            {
+                $this->flash->addMessage('info', 'Votre Calendrier mis à jour avec succès');
+                foreach ($retour as $l => $ligne) {
+                    $this->flash->addMessage($l,$ligne);
+                }
+            }
+        } // --eof traitements
 
 
-       }
-       //return print_r($errors);
-
-
-
-                                        /*{% if calendrier.withinMonth(date) %}
-*/
-/*
-            //$data = User::create($user);
-            $data = User::create([
-                'nom' => $user['nom'],
-                'prenom' => $user['prenom'],
-                'email' => $user['email']
-            ]);
-            return $this->response->withJson($data, 200);
-            */
-
-
-        /** TO DO UPDATE */
-        /*
-        $user = $calendrier->user;
-
-        return $this->view->render($response,'calendrier.twig', [
-                                                                    $args,
-                                                                    "user" => $user,
-                                                                    "calendrier" => $calendrier,
-
-                                                                ]);
-        */
-        $this->flash->addMessage('success', 'Votre Calendrier mis à jour avec succès');
-
-        if ($request->getHeader('X-Requested-With') === 'XMLHttpRequest') {
+        // Soit on a Ajaxé le POST liens de navigation précédent/suivant
+        if ($request->isXHR()) {
             return $response;
-        } else {
-            //return print_r($postArr);
-            //return print_r($updateForm);
-            //return $response->withRedirect($request->getHeader('Referer'));
-            //return $args['updateForm'];
+        }
+        // Soit Submit normal
+        else
+        {
             return $response->withRedirect($this->router->pathFor('calendar.general', ['month'=>$month, 'year'=>$year]));
         }
-       //['month'=>$month, 'year'=>$year]
     }
 }
