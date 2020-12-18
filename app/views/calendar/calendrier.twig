@@ -1,14 +1,12 @@
 {% extends 'templates/app.twig' %}
 
 {% block content %}
-    <div class="content">
-
+     <div class="content {{ _self.templateName|replace({'.twig':'', '/':'_'}) }}">
         {% if auth.check %}
             <div class="card">
               <div class="card-body">
                     <div class="col-lg-10 col-sm-12 offset-lg-1">
                         <div class="d-flex flex-row align-items-center justify-content-between col-sm3">
-                        {# nb semaines : {{calendrier.getWeeks()}} #}
                             <h2 class="mb-4 text-center card-title">{{ user.getFullNom() }} : {{ calendrier.toString() }}</h2>
                             <div class="navigation">
                                 <a href="{{  path_for('calendar.general', { 'month': calendrier.previousMonth().month , 'year': calendrier.previousMonth().year})  }}" class="btn btn-primary" >&lt;</a>
@@ -25,24 +23,17 @@
                                 {% endfor %}
                             </div>
                         </header>
-
                         <div class="row border border-right-0 border-bottom-0">
                             {% for w, week in 0..calendrier.getWeeks()-1 %}
                                 {% for k, day in calendrier.days %}
                                     {% set date = calendrier.getday(loop.parent.w,k) %}
                                     <div class="day col-sm p-2 border border-left-0 border-top-0 text-truncate {{ (date|date("d/m/Y") is same as (calendrier.date_today)) ? "today text-white" : "" }}  {{ calendrier.withinMonth(date)  ? '' : 'bg-light text-muted' }}"> <!-- d-none d-sm-inline-block bg-light text-muted -->
-                                      <h5 class="row align-items-center">
-                                        <span class="date col-1">{{ date|date("d") }}</span>
-                                        <span class="col-1"></span>
-                                        <small class="col d-sm-none text-center text-muted">{{ day }}</small>
-                                      </h5>
-                                      {# <p> s{{ loop.parent.w  }} - d{{k}}</p> #}
+                                        <h5 class="row align-items-center">
+                                            <span class="date col-1">{{ date|date("d") }}</span>
+                                            <span class="col-1"></span>
+                                            <small class="col d-sm-none text-center text-muted">{{ day }}</small>
+                                        </h5>
                                         {% if calendrier.withinMonth(date) %}
-                                           {#  {% if (user_events[date|date("Ymd")] is defined) %} #}
-                                                {# <a class="event d-block p-1 pl-2 pr-2 mb-1 rounded text-truncate small bg-info text-white align-middle" title="Test Event 1">
-                                                    <span class="badge badge-light">{{user_events[date|date("Ymd")].user_initiales}}</span>
-                                                    {{user_events[date|date("Ymd")].translated_eventType}}
-                                                </a> #}
                                                 <div class="input-group input-group-sm">
                                                     <div class="input-group-prepend">
                                                         <span class="input-group-text"><span class="badge badge-light">{{user_events[date|date("Ymd")].user_initiales}}</span></span>
@@ -53,7 +44,6 @@
                                                             <option value="{{ l }}" {% if l is same as(user_events[date|date("Ymd")].event_type.id) %} selected="selected" {% endif %}> {{ type.titre }} </option>
                                                             {% endfor %}
                                                     </select>
-
                                                     <div class="input-group-append align-middle ">
                                                         <div class="input-group-text {% if user_events[date|date("Ymd")].voiture %} checked-success {% endif %}">
                                                             <label for="voiture_sj{{ date|date("d") }}" class="mb-0" ><i class="mr-1 fas fa-car "></i></label>
@@ -61,15 +51,6 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                            {# {% else %}
-                                                <select name="sj{{ date|date("d") }}" id="sj{{ date|date("Ymd") }}" class="type_event form-control form-control-sm">
-                                                    <option value=""></option>
-                                                    {% for l,type in liste_type_event %}
-                                                    <option value="{{ l }}"> {{ type.titre }}</option>
-                                                    {% endfor %}
-                                                </select>
-                                                <p class="d-sm-none">No events</p>
-                                            {% endif %} #}
                                         {% endif %}
                                     </div>
                                 {% endfor %}
@@ -88,15 +69,9 @@
                 </form>
               </div>
             </div>
-
         {% else %}
 
         {% endif %}
-
-       {#  <pre>{{dump(liste_type_event)}}</pre> #}
-         {# <pre>{{dump(user_events)}}</pre>
-          #}
-          {# <pre>{{ dump(data)}}</pre> #}
     </div>
 
     <script>
@@ -107,8 +82,6 @@
             $(this).closest(".input-group-append").find(".input-group-text").toggleClass('checked-success');
             check_verif($(this));
         });
-
-
 
         $("select.type_event").each(function(){
 
@@ -181,8 +154,6 @@
                });
             }
         });
-
-
     });
 
     function check_verif(cb) {

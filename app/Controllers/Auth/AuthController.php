@@ -47,13 +47,13 @@ class AuthController extends Controller
 
     public function postSignUp($request, $response)
     {
-
+        $additionalChars = "ŠšÐdŽžCcCcÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøœùúûýýþÿ-";
         $validation = $this->validator->validate($request, [
             'email' => v::noWhitespace()->notEmpty()->email()->emailAvailable(),
             'password' => v::noWhitespace()->notEmpty()->length(6),
-            'nom' => v::notEmpty()->alpha(),
-            'prenom' => v::notEmpty()->alpha(),
-            'ville' => v::notEmpty()->alpha(),
+            'nom' => v::notEmpty()->alpha($additionalChars),
+            'prenom' => v::notEmpty()->alpha($additionalChars),
+            'ville' => v::notEmpty()->alpha($additionalChars),
             'tel' => v::optional(v::noWhitespace()->phone()), // optionnel mais doit etre valide
             'gsm' => v::optional(v::noWhitespace()->phone()), // optionnel mais doit etre valide
         ]);
@@ -95,11 +95,12 @@ class AuthController extends Controller
 
     public function postChangeInfos($request, $response)
     {
+        $additionalChars = "ŠšÐdŽžCcCcÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøœùúûýýþÿ-";
         $validation = $this->validator->validate($request, [
             //'email' => v::noWhitespace()->notEmpty()->email()->emailAvailable(),
-            'nom' => v::notEmpty()->alpha(),
-            'prenom' => v::notEmpty()->alpha(),
-            'ville' => v::notEmpty()->alpha(),
+            'nom' => v::notEmpty()->alpha($additionalChars),
+            'prenom' => v::notEmpty()->alpha($additionalChars),
+            'ville' => v::notEmpty()->alpha($additionalChars),
             'tel' => v::optional(v::noWhitespace()->phone()), // optionnel mais doit etre valide
             'gsm' => v::optional(v::noWhitespace()->phone()), // optionnel mais doit etre valide
         ]);

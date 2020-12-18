@@ -3,20 +3,10 @@ body .container, body .container-fluid {
     padding-bottom: 40px;
 }
 
+nav a.delete_account { color: #dc3545; }
+nav a.delete_account:hover { color:#FFF;    background-color: #dc3545;}
 
-nav a.delete_account {
-    color: #dc3545;
-}
-
-nav a.delete_account:hover {
-    color:#FFF;
-    background-color: #dc3545;
-}
-
-.content {
-    margin: 0 auto;
-    max-width: 100%;
-}
+.content { margin: 0 auto; max-width: 100%;}
 
 .title {
     padding-top: 30%;
@@ -24,21 +14,8 @@ nav a.delete_account:hover {
     font-size: 96px;
 }
 
-#getCalendar .form-group {
-    margin-bottom: 0.2rem;
-}
-
-.calendrier h3 { font-size: 1rem; }
-.calendrier .day.today {
-    background-color: #a3cfd6!important;
-}
-.calendrier .day.today .date {
-    color:;
-}
-
-.calendrier .text-muted {
-    color: #c7c7c7!important;
-}
+form > .form-row > .form-group { margin-bottom: 0rem;}
+.list-group-flush div.list-group-item-action + a.list-group-item-action {margin-top: -2px;}
 
 .user_macaron {
     display: inline-block;
@@ -53,34 +30,23 @@ nav a.delete_account:hover {
     vertical-align: middle;
     margin-right: 0.5em;
     color: white;
-  }
-
-.checked-success label i.fas {color: #4a9ef9;}
-
-.calendrier .form-control.is-changing {
-    border-color: #ffc107!important;
 }
 
-.opacity-0 {
-  opacity:0!important;
-}
-.opacity-1 {
-  opacity:0.2!important;
-}
-.opacity-2 {
-  opacity:0.4!important;
-}
-.opacity-3 {
-  opacity:0.6!important;
-}
-.opacity-4 {
-  opacity:.8!important;
-}
-.opacity-5 {
-  opacity:1!important;
-}
+/** CALENDAR **/
+.calendrier h3 { font-size: 1rem; }
+.calendrier .day.today {background-color: #a3cfd6!important;}
+.calendrier .table th .today, .calendrier .table td.today { color: #f1f4d3;}
+.calendrier .table td.today {background-color: rgba(228,255,0,0.13);}
+.calendrier .text-muted { color: #c7c7c7!important;}
+.calendrier .checked-success label i.fas {color: #4a9ef9;}
+.calendrier .form-control.is-changing { border-color: #ffc107!important;}
 
-/* Maybe even support hover opacity shifts */
+.opacity-0 { opacity:0!important;}
+.opacity-1 { opacity:0.2!important;}
+.opacity-2 { opacity:0.4!important;}
+.opacity-3 { opacity:0.6!important;}
+.opacity-4 { opacity:.8!important;}
+.opacity-5 { opacity:1!important;}
 .opacity-0h5 {
   opacity:0!important;
   transition: opacity .25s ease-in-out!important;
@@ -104,9 +70,6 @@ nav a.delete_account:hover {
 }
 
 @media (min-width: 576px) {
-    .calendrier {
-
-    }
     .calendrier .day {
         height: 14vw;
         max-height: 14vh;

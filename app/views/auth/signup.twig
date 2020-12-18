@@ -1,139 +1,141 @@
 {% extends 'templates/app.twig' %}
 
 {% block content %}
-    <div class="row">
-        <div class="col-lg-6 col-sm-12 offset-lg-3">
-            <div class="card ">
-                <div class="card-body">
-                    <div class="card-title"><h2 class="text-center display-4 mb-4">Inscription</h2></div>
-                    <form action="{{ path_for('auth.signup') }}" method="post" class="needs-validation">
-                        <div class="row">
-                            <div class="col">
-                                <div class="form-group">
-                                         <label for="email" class="">Email <span class="text-danger">*</span></label>
-                                    <div class="input-group  {{ errors.validated.email ? 'was-validated' : '' }}">
-                                        <div class="input-group-prepend">
-                                          <span class="input-group-text" id="email">@</span>
-                                        </div>
-                                        <input type="email" name="email" id="email" placeholder="email@domaine.com" class="form-control {{ errors.email ? ' is-invalid' : '' }}" value="{{ old.email }}">
-
-                                        {% if errors.email %}<span class="invalid-feedback">{{ errors.email | first }}</span>{% endif %}
-                                        {% if errors.validated.email %} <span class="valid-feedback">ok <i class="fas fa-check"></i></span>{% endif %}
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col">
-                                <div class="form-group">
-                                         <label for="password" class="">Password <span class="text-danger">*</span></label>
-                                    <div class="input-group  {{ errors.validated.password ? 'was-validated' : '' }}">
-                                         <div class="input-group-prepend">
-                                              <span class="input-group-text" id="password"><i class="fas fa-key"></i></span>
+    <div class="content {{ _self.templateName|replace({'.twig':'', '/':'_'}) }}">
+        <div class="row">
+            <div class="col-lg-6 col-sm-12 offset-lg-3">
+                <div class="card ">
+                    <div class="card-body">
+                        <div class="card-title"><h2 class="text-center display-4 mb-4">Inscription</h2></div>
+                        <form action="{{ path_for('auth.signup') }}" method="post" class="needs-validation">
+                            <div class="row">
+                                <div class="col">
+                                    <div class="form-group">
+                                             <label for="email" class="">Email <span class="text-danger">*</span></label>
+                                        <div class="input-group  {{ errors.validated.email ? 'was-validated' : '' }}">
+                                            <div class="input-group-prepend">
+                                              <span class="input-group-text" id="email">@</span>
                                             </div>
-                                        <input type="password" name="password" id="password" placeholder="xxxxxxx" class="form-control {{ errors.password ? ' is-invalid' : '' }}" value="{{ old.password }}">
+                                            <input type="email" name="email" id="email" placeholder="email@domaine.com" class="form-control {{ errors.email ? ' is-invalid' : '' }}" value="{{ old.email }}">
 
-                                        {% if errors.password %}<span class="invalid-feedback">{{ errors.password | first }}</span>{% endif %}
-                                        {% if errors.validated.password %} <span class="valid-feedback">ok <i class="fas fa-check"></i></span>{% endif %}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <hr />
-                        <div class="row">
-                            <div class="col col-10">
-                                <div class="form-group">
-                                    <div class="input-group  {{ errors.validated.nom ? 'was-validated' : '' }}">
-                                        <label for="nom" class="col-sm-2 d-sm-none d-md-inline col-form-label text-right">Nom <span class="text-danger">*</span></label>
-                                        <div class="col-sm-12 col-md-10">
-                                            <input type="text" name="nom" id="nom" placeholder="Nom" class="form-control {{ errors.nom ? ' is-invalid' : '' }}" value="{{ old.nom }}"  >
-
-                                            {% if errors.nom %}<span class="invalid-feedback">{{ errors.nom | first }}</span>{% endif %}
-                                            {% if errors.validated.nom %} <span class="valid-feedback">ok <i class="fas fa-check"></i></span>{% endif %}
+                                            {% if errors.email %}<span class="invalid-feedback">{{ errors.email | first }}</span>{% endif %}
+                                            {% if errors.validated.email %} <span class="valid-feedback">ok <i class="fas fa-check"></i></span>{% endif %}
                                         </div>
                                     </div>
                                 </div>
-                                <div class="form-group ">
-                                    <div class="input-group  {{ errors.validated.prenom ? 'was-validated' : '' }}">
-                                        <label for="prenom" class="col-sm-2 d-sm-none d-md-inline col-form-label text-right">Prénom <span class="text-danger">*</span></label>
-                                        <div class="col-sm-12 col-md-10">
-                                            <input type="text" name="prenom" id="prenom" placeholder="Prénom" class="form-control {{ errors.prenom ? ' is-invalid' : '' }}" value="{{ old.prenom }}"  >
+                                <div class="col">
+                                    <div class="form-group">
+                                             <label for="password" class="">Password <span class="text-danger">*</span></label>
+                                        <div class="input-group  {{ errors.validated.password ? 'was-validated' : '' }}">
+                                             <div class="input-group-prepend">
+                                                  <span class="input-group-text" id="password"><i class="fas fa-key"></i></span>
+                                                </div>
+                                            <input type="password" name="password" id="password" placeholder="xxxxxxx" class="form-control {{ errors.password ? ' is-invalid' : '' }}" value="{{ old.password }}">
 
-                                            {% if errors.prenom %}<span class="invalid-feedback">{{ errors.prenom | first }}</span>{% endif %}
-                                            {% if errors.validated.prenom %} <span class="valid-feedback">ok <i class="fas fa-check"></i></span>{% endif %}
-
+                                            {% if errors.password %}<span class="invalid-feedback">{{ errors.password | first }}</span>{% endif %}
+                                            {% if errors.validated.password %} <span class="valid-feedback">ok <i class="fas fa-check"></i></span>{% endif %}
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col col-2">
+                            <hr />
+                            <div class="row">
+                                <div class="col col-10">
+                                    <div class="form-group">
+                                        <div class="input-group  {{ errors.validated.nom ? 'was-validated' : '' }}">
+                                            <label for="nom" class="col-sm-2 d-sm-none d-md-inline col-form-label text-right">Nom <span class="text-danger">*</span></label>
+                                            <div class="col-sm-12 col-md-10">
+                                                <input type="text" name="nom" id="nom" placeholder="Nom" class="form-control {{ errors.nom ? ' is-invalid' : '' }}" value="{{ old.nom }}"  >
+
+                                                {% if errors.nom %}<span class="invalid-feedback">{{ errors.nom | first }}</span>{% endif %}
+                                                {% if errors.validated.nom %} <span class="valid-feedback">ok <i class="fas fa-check"></i></span>{% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div class="form-group ">
-                                        <label for="color" class="col-form-label" title="Couleur" data-toggle="tooltip" data-placement="top" style="color:{{ old.color  ? old.color : "#454870"}}">Couleur <i  class="align-middle fas fa-address-card fa-3x"></i></label>
-                                    <div class="input-group input-group-sm {{ errors.validated.color ? 'was-validated' : '' }}">
-                                        <input type="color" name="color" id="color" class="sr-only form-control  {{ errors.color ? ' is-invalid' : '' }}"  value="{{ old.color  ? old.color : "#454870"}}">
-                                        {% if errors.color %}<span class="invalid-feedback">{{ errors.color | first }}</span>{% endif %}
-                                        {% if errors.validated.color %} <span class="valid-feedback">ok <i class="fas fa-check"></i></span>{% endif %}
-                                    </div>
-                                    <script>
-                                        $("input[type='color']").on('change', function(){
-                                            var c = $(this).val();
-                                            console.log(c);
-                                            $(this).closest('.form-group').find('label').css({'color':c});
-                                        });
-                                    </script>
-                                </div>
-                            </div>
-                        </div>
-                        <hr>
-                        <div class="row">
-                            <div class="col">
-                                <div class="form-group  {{ errors.validated.ville ? 'was-validated' : '' }}">
-                                    <label for="ville" class="col-form-label"><i class="fas fa-map-marker-alt"></i> Ville <span class="text-danger">*</span></label>
-                                    <div>
-                                        <input type="text" name="ville" id="ville" class="form-control {{ errors.ville ? ' is-invalid' : '' }}" value="{{ old.ville }}"  >
+                                        <div class="input-group  {{ errors.validated.prenom ? 'was-validated' : '' }}">
+                                            <label for="prenom" class="col-sm-2 d-sm-none d-md-inline col-form-label text-right">Prénom <span class="text-danger">*</span></label>
+                                            <div class="col-sm-12 col-md-10">
+                                                <input type="text" name="prenom" id="prenom" placeholder="Prénom" class="form-control {{ errors.prenom ? ' is-invalid' : '' }}" value="{{ old.prenom }}"  >
 
-                                        {% if errors.ville %}<span class="invalid-feedback">{{ errors.ville | first }}</span>{% endif %}
-                                        {% if errors.validated.ville %} <span class="valid-feedback">ok <i class="fas fa-check"></i></span>{% endif %}
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col">
-                                <div class="form-group  {{ errors.validated.service ? 'was-validated' : '' }}">
-                                    <label for="service" class="col-form-label"><i class="fas fa-id-badge"></i> Service</label>
-                                    <div>
-                                        <input type="text" name="service" id="service" class="form-control {{ errors.service ? ' is-invalid' : '' }}" value="{{ old.service }}" >
-                                        {% if errors.service %}<span class="invalid-feedback">{{ errors.service | first }}</span>{% endif %}
-                                        {% if errors.validated.service %} <span class="valid-feedback">ok <i class="fas fa-check"></i></span>{% endif %}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                <div class="form-group  {{ (errors.validated.tel) and (old.tel != "" ) ? 'was-validated' : '' }}">
-                                    <label for="tel" class="col-form-label"><i class="fas fa-phone"></i> tel</label>
-                                    <div>
-                                        <input type="text" name="tel" id="tel" placeholder="ex : 04XXXXXXXX" class="form-control {{ errors.tel ? ' is-invalid' : '' }}" value="{{ old.tel }}" >
-                                        {% if errors.tel %}<span class="invalid-feedback">{{ errors.tel | first }}</span>{% endif %}
-                                        {% if (errors.validated.tel) and (old.tel != "")   %} <span class="valid-feedback">ok <i class="fas fa-check"></i></span>{% endif %}
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col">
-                                <div class="form-group  {{ (errors.validated.gsm) and (old.gsm != "" ) ? 'was-validated' : '' }}">
-                                    <label for="gsm" class="col-form-label"><i class="fas fa-mobile-alt"></i> Portable</label>
-                                    <div>
-                                        <input type="text" name="gsm" id="gsm" placeholder="ex : 06XXXXXXXX" class="form-control {{ errors.gsm ? ' is-invalid' : '' }}" value="{{ old.gsm }}" >
-                                        {% if errors.gsm %}<span class="invalid-feedback">{{ errors.gsm | first }}</span>{% endif %}
-                                        {% if (errors.validated.gsm) and (old.gsm != "") %} <span class="valid-feedback">ok <i class="fas fa-check"></i></span>{% endif %}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="text-right">
-                            <button type="submit" class="btn btn-default align-right">Enregistrer</button>
-                        </div>
+                                                {% if errors.prenom %}<span class="invalid-feedback">{{ errors.prenom | first }}</span>{% endif %}
+                                                {% if errors.validated.prenom %} <span class="valid-feedback">ok <i class="fas fa-check"></i></span>{% endif %}
 
-                        {{ csrf.field | raw }}
-                    </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col col-2">
+                                        <div class="form-group ">
+                                            <label for="color" class="col-form-label" title="Couleur" data-toggle="tooltip" data-placement="top" style="color:{{ old.color  ? old.color : "#454870"}}">Couleur <i  class="align-middle fas fa-address-card fa-3x"></i></label>
+                                        <div class="input-group input-group-sm {{ errors.validated.color ? 'was-validated' : '' }}">
+                                            <input type="color" name="color" id="color" class="sr-only form-control  {{ errors.color ? ' is-invalid' : '' }}"  value="{{ old.color  ? old.color : "#454870"}}">
+                                            {% if errors.color %}<span class="invalid-feedback">{{ errors.color | first }}</span>{% endif %}
+                                            {% if errors.validated.color %} <span class="valid-feedback">ok <i class="fas fa-check"></i></span>{% endif %}
+                                        </div>
+                                        <script>
+                                            $("input[type='color']").on('change', function(){
+                                                var c = $(this).val();
+                                                console.log(c);
+                                                $(this).closest('.form-group').find('label').css({'color':c});
+                                            });
+                                        </script>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col">
+                                    <div class="form-group  {{ errors.validated.ville ? 'was-validated' : '' }}">
+                                        <label for="ville" class="col-form-label"><i class="fas fa-map-marker-alt"></i> Ville <span class="text-danger">*</span></label>
+                                        <div>
+                                            <input type="text" name="ville" id="ville" class="form-control {{ errors.ville ? ' is-invalid' : '' }}" value="{{ old.ville }}"  >
+
+                                            {% if errors.ville %}<span class="invalid-feedback">{{ errors.ville | first }}</span>{% endif %}
+                                            {% if errors.validated.ville %} <span class="valid-feedback">ok <i class="fas fa-check"></i></span>{% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="form-group  {{ errors.validated.service ? 'was-validated' : '' }}">
+                                        <label for="service" class="col-form-label"><i class="fas fa-id-badge"></i> Service</label>
+                                        <div>
+                                            <input type="text" name="service" id="service" class="form-control {{ errors.service ? ' is-invalid' : '' }}" value="{{ old.service }}" >
+                                            {% if errors.service %}<span class="invalid-feedback">{{ errors.service | first }}</span>{% endif %}
+                                            {% if errors.validated.service %} <span class="valid-feedback">ok <i class="fas fa-check"></i></span>{% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <div class="form-group  {{ (errors.validated.tel) and (old.tel != "" ) ? 'was-validated' : '' }}">
+                                        <label for="tel" class="col-form-label"><i class="fas fa-phone"></i> tel</label>
+                                        <div>
+                                            <input type="text" name="tel" id="tel" placeholder="ex : 04XXXXXXXX" class="form-control {{ errors.tel ? ' is-invalid' : '' }}" value="{{ old.tel }}" >
+                                            {% if errors.tel %}<span class="invalid-feedback">{{ errors.tel | first }}</span>{% endif %}
+                                            {% if (errors.validated.tel) and (old.tel != "")   %} <span class="valid-feedback">ok <i class="fas fa-check"></i></span>{% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="form-group  {{ (errors.validated.gsm) and (old.gsm != "" ) ? 'was-validated' : '' }}">
+                                        <label for="gsm" class="col-form-label"><i class="fas fa-mobile-alt"></i> Portable</label>
+                                        <div>
+                                            <input type="text" name="gsm" id="gsm" placeholder="ex : 06XXXXXXXX" class="form-control {{ errors.gsm ? ' is-invalid' : '' }}" value="{{ old.gsm }}" >
+                                            {% if errors.gsm %}<span class="invalid-feedback">{{ errors.gsm | first }}</span>{% endif %}
+                                            {% if (errors.validated.gsm) and (old.gsm != "") %} <span class="valid-feedback">ok <i class="fas fa-check"></i></span>{% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <button type="submit" class="btn btn-default align-right">Enregistrer</button>
+                            </div>
+
+                            {{ csrf.field | raw }}
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>

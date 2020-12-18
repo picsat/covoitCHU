@@ -1,8 +1,7 @@
 {% extends 'templates/app.twig' %}
 
 {% block content %}
-    <div class="content">
-
+    <div class="content {{ _self.templateName|replace({'.twig':'', '/':'_'}) }}">
         {% if auth.check %}
             <div class="card">
               <div class="card-body">
@@ -16,8 +15,6 @@
                             </div>
                         </div>
                     </div>
-
-
                     <div class="calendrier col-lg-10 col-sm-12 offset-lg-1 mh-75 {{ 'nb_weeks_' ~ calendrier.getWeeks() }}">
                         <div class="table-responsive">
                             <table class="table table-striped table-bordered table-hover table-sm ">
@@ -28,7 +25,7 @@
                                     {% for k, day in calendrier.days %}
                                         {% set date = calendrier.getday(loop.parent.w,k) %}
                                             {% if calendrier.withinMonth(date) %}
-                                                <th scope="col"><span class="d-block p-1 text-center text-muted">{{ day|first|upper }}</span><span class="d-block p-1 text-center ">{{ date|date("d") }}</span></th>
+                                                <th scope="col"><span class="d-block p-1 text-center text-muted">{{ day|first|upper }}</span><span class="d-block p-1 text-center {{ (date|date("d/m/Y") is same as (calendrier.date_today)) ? "today" : "" }}">{{ date|date("d") }}</span></th>
                                             {% endif %}
                                     {% endfor %}
                                 {% endfor %}
@@ -49,25 +46,20 @@
                                                 {% for k, day in calendrier.days %}
                                                     {% set date = calendrier.getday(loop.parent.w,k) %}
                                                         {% if calendrier.withinMonth(date) %}
-                                                            <td class="text-center align-middle">
+                                                            <td class="text-center align-middle {{ (date|date("d/m/Y") is same as (calendrier.date_today)) ? "today" : "" }}">
                                                                     {% if user_cal[date|date("Ymd")]|length > 0 %}
-                                                                        <span class="badge badge-pill text-white bg-dark" style="background-color:{{user_cal[date|date("Ymd")].event_type.color}}!important;">{{ user_cal[date|date("Ymd")].event_type.translated_eventType }} {% if user_cal[date|date("Ymd")].voiture %}<br><i class="fa-sm fas fa-car "></i>{% endif %}</span>
-
-
+                                                                        <span class="badge badge-pill text-white bg-dark" style="background-color:{{user_cal[date|date("Ymd")].event_type.color}}!important;">{{ user_cal[date|date("Ymd")].event_type.translated_eventType }} {% if user_cal[date|date("Ymd")].voiture %}<br/><i class="fa-sm fas fa-car "></i>{% endif %}</span>
                                                                     {% endif %}
-
                                                             </td>
                                                         {% endif %}
                                                 {% endfor %}
                                             {% endfor %}
                                         </tr>
-                                    {% endfor%}
-
+                                    {% endfor %}
                                 </tbody>
                             </table>
                         </div>
                     </div>
-
                 {% for u, user_cal in user_events %}
                     <div class="modal fade" id="userinfo{{user_cal.id}}" tabindex="{{loop.index}}" aria-labelledby="userinfo" aria-hidden="true">
                       <div class="modal-dialog">
@@ -89,25 +81,13 @@
                                 <li class="list-group-item"><i class="fas fa-phone"></i> Téléphone : {{user_cal.tel}}</li>
                                 <li class="list-group-item"><i class="fas fa-mobile-alt"></i> Portable : {{user_cal.gsm}}</li>
                             </ul>
-
                           </div>
                         </div>
                       </div>
                     </div>
                 {% endfor %}
-
         {% else %}
 
         {% endif %}
-
-
     </div>
-
-    <script>
-    $(document).ready(function()
-    {
-            $('[data-toggle="tooltip"]').tooltip();
-    });
-
-    </script>
 {% endblock %}
