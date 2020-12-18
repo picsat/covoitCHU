@@ -14,10 +14,10 @@ class MatchesPasswordException extends ValidationException
 {
     public static $defaultTemplates = [
         self::MODE_DEFAULT => [
-            self::STANDARD => '{{name}} does not macth',
+            self::STANDARD => '{{name}} ne correspond pas à celui enregistré actuellement pour ce compte',
         ],
         self::MODE_NEGATIVE => [
-            self::STANDARD => '{{name}} does not macth negative',
+            self::STANDARD => '{{name}} a l\air de ne pas correspondre',
         ]
     ];
 }

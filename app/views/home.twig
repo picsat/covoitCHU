@@ -9,11 +9,7 @@
                 <h2 class="card-title">Bonjour {{ user.nom }} {{ user.prenom }} </h2>
                     <p class="card-text">A partir de cet espace vous pouvez : </p>
                      <div class="list-group list-group-flush">
-                        <a class="list-group-item list-group-item-action" href="{{ path_for('auth.password.change') }}">Changer vos informations et Password</a>
-                        <a class="list-group-item list-group-item-action" href="{{ path_for('auth.signup') }}">Inscrire un nouveau membre</a>
-                        <div class="list-group-item list-group-item-action" href="#">
-
-
+                        <div class="list-group-item list-group-item-action">
                                 <form id="getCalendar"   name="getCalendar" method="post" action="{{ path_for('calendar.general') }}">
                                     <div class="form-row">
                                         <div class="form-group col-md-6"><label>Mettre à jour votre calendrier</label></div>
@@ -39,9 +35,7 @@
                                     {{ csrf.field | raw }}
                                </form>
                         </div>
-                        <div class="list-group-item list-group-item-action" href="#">
-
-
+                        <div class="list-group-item list-group-item-action">
                                 <form id="getCalendarfoAll" name="getCalendarfoAll" method="post" action="{{ path_for('calendar.forall') }}">
                                     <div class="form-row">
                                         <div class="form-group col-md-6"><label>Voir le calendrier Global</label></div>
@@ -67,23 +61,26 @@
                                     {{ csrf.field | raw }}
                                </form>
                         </div>
-                        <button type="button" class="list-group-item list-group-item-action list-group-item-danger" disabled action="{{ path_for('user.detroy') }}{{auth.user.id}}"><i class="fas fa-trash"></i> Supprimer ce compte</button>
+                        <a class="list-group-item list-group-item-action" href="{{ path_for('auth.password.change') }}"><i class="align-middle fas fa-key"></i> Changer votre mot de passe</a>
+                        <a class="list-group-item list-group-item-action" href="{{ path_for('auth.infos.change') }}"><i class="align-middle fas fa-address-card"></i> Changer vos informations</a>
+                        <a class="list-group-item list-group-item-action" href="{{ path_for('auth.signup') }}"><i class="fas fa-user-plus"></i> Inscrire un nouveau membre</a>
+                        {# <button type="button" class="list-group-item list-group-item-action list-group-item-danger" disabled action="{{ path_for('user.detroy') }}{{auth.user.id}}"><i class="fas fa-trash"></i> Supprimer ce compte</button> pour plus tard #}
                     </div>
                 </div>
               </div>
             </div>
 
         {% else %}
-            <h1 class="diplay-6">{{ application.name }}</h1>
+            <h1 class="display-4 text-center mb-4">{{ application.name }}</h1>
              <div class="row">
                 <div class="col-md-6 offset-md-3">
                     <div class="card ">
                         <div class="card-body">
-                        <div class="card-title">Sign In</div>
+                        <div class="card-title"><h2>Se connecter</h2></div>
                             <form action="{{ path_for('auth.signin') }}" method="post">
                                 <div class="form-group{{ errors.email ? ' has-error' : '' }}">
                                     <label for="email">Email</label>
-                                    <input type="email" name="email" id="email" placeholder="you@domain.com" class="form-control" value="{{ old.email }}">
+                                    <input type="email" name="email" id="email" placeholder="email@domaine.com" class="form-control" value="{{ old.email }}">
                                     {% if errors.email %}
                                     <span class="hel-block">{{ errors.email | first }}</span>
                                     {% endif %}
@@ -97,7 +94,7 @@
                                     {% endif %}
                                 </div>
                                 <button type="submit" class="btn btn-default">Sign In</button>
-                                {{ pwd }}
+                                {# {{ pwd }} #}
                                 {{ csrf.field | raw }}
                             </form>
                         </div>

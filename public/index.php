@@ -14,10 +14,12 @@ if (PHP_SAPI == 'cli-server') {
     }
 }
 
-session_start();
-
 // Autochargement des classes
 require __DIR__ . '/../vendor/autoload.php';
+
+ini_set('session.gc_maxlifetime', 1800);
+session_start();
+
 
 //Register model
 require __DIR__ . '/../app/Models/User.php';

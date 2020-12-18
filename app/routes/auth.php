@@ -6,8 +6,6 @@ use App\Middleware\AuthMiddleware;
  $container = $app->getContainer();
 
   $app->group('', function () use ($app) {
-        $this->get('/auth/signup', 'AuthController:getSignUp')->setName('auth.signup');
-        $this->post('/auth/signup', 'AuthController:postSignUp');
 
         $this->get('/auth/signin', 'AuthController:getSignIn')->setName('auth.signin');
         $this->post('/auth/signin', 'AuthController:postSignIn');
@@ -17,5 +15,11 @@ use App\Middleware\AuthMiddleware;
         $this->get('/auth/signout', 'AuthController:getSignOut')->setName('auth.signout');
         $this->get('/auth/password/change', 'PasswordController:getChangePassword')->setName('auth.password.change');
         $this->post('/auth/password/change', 'PasswordController:postChangePassword');
+
+        $this->get('/auth/signup', 'AuthController:getSignUp')->setName('auth.signup');
+        $this->post('/auth/signup', 'AuthController:postSignUp');
+
+        $this->get('/auth/infos/change', 'AuthController:getChangeInfos')->setName('auth.infos.change');
+        $this->post('/auth/infos/change', 'AuthController:postChangeInfos');
     })->add(new AuthMiddleware($container));
 

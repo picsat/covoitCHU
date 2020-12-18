@@ -1,28 +1,27 @@
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="{{ path_for('home') }}">Covoit CHU</a>
+    <a class="navbar-brand" href="{{ path_for('home') }}">{{ application.name }}</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
   <div class="collapse navbar-collapse" id="navbar">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item active">
-        <a class="nav-link" href="{{ path_for('home') }}">Home</a>
+        <a class="nav-link" href="{{ path_for('home') }}">Accueil</a>
       </li>
     </ul>
     <ul class="navbar-nav">
     {% if auth.check %}
         <li class="nav-item dropdown">
-          <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="user_macaron" style="background-color:{{ user.getColor() }};">{{ auth.user.macaron() }}</span><span>{{auth.user.getFullNom()}}</span> <span class="caret"></span></a>
+          <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="user_macaron" style="background-color:{{ auth.user.getColor() }};">{{ auth.user.macaron() }}</span><span>{{auth.user.getFullNom()}}</span> <span class="caret"></span></a>
           <ul class="dropdown-menu dropdown-menu-right">
-            <li><a class="dropdown-item" href="{{ path_for('auth.password.change') }}">Change Password</a></li>
-            <li><a class="dropdown-item" href="{{ path_for('auth.signout') }}">Sign Out</a></li>
-            <li><a class="dropdown-item delete_account" href="{{ path_for('user.detroy') }}{{auth.user.id}}"><i class="fas fa-trash"></i> Supprimer le compte</a></li>
+            <li><a class="dropdown-item" href="{{ path_for('auth.password.change') }}">Changer le mot de passe</a></li>
+            <li><a class="dropdown-item" href="{{ path_for('auth.signout') }}">Déconnexion</a></li>
+            {# <li><a class="dropdown-item delete_account" href="{{ path_for('user.detroy') }}"><i class="fas fa-trash"></i> Supprimer le compte</a></li> pour plus tard #}
           </ul>
         </li>
         {% else %}
-        <li class="nav-item" ><a class="nav-link" href="{{ path_for('auth.signin') }}">Sign In</a></li>
-        <li class="nav-item" ><a class="nav-link" href="{{ path_for('auth.signup') }}">Sign Up</a></li>
+        <li class="nav-item" ><a class="nav-link" href="{{ path_for('auth.signin') }}">Se connecter</a></li>
     {% endif %}
 
     </ul>

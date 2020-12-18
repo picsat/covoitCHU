@@ -33,7 +33,7 @@ class AuthController extends Controller
         );
 
         if (! $auth) {
-            $this->flash->addMessage('error', 'Could not sign you in with those details');
+            $this->flash->addMessage('error', 'Impossible de se connecter avec ces informations');
             return $response->withRedirect($this->router->pathFor('auth.signin'));
         }
 
@@ -50,9 +50,14 @@ class AuthController extends Controller
 
         $validation = $this->validator->validate($request, [
             'email' => v::noWhitespace()->notEmpty()->email()->emailAvailable(),
-            'nom' => v::noWhitespace()->notEmpty()->alpha(),
-            'password' => v::noWhitespace()->notEmpty(),
+            'password' => v::noWhitespace()->notEmpty()->length(6),
+            'nom' => v::notEmpty()->alpha(),
+            'prenom' => v::notEmpty()->alpha(),
+            'ville' => v::notEmpty()->alpha(),
+            'tel' => v::optional(v::noWhitespace()->phone()), // optionnel mais doit etre valide
+            'gsm' => v::optional(v::noWhitespace()->phone()), // optionnel mais doit etre valide
         ]);
+
 
         if ($validation->failed()) {
             return $response->withRedirect($this->router->pathFor('auth.signup'));
@@ -60,19 +65,69 @@ class AuthController extends Controller
 
         $user = User::create([
             'email' => $request->getParam('email'),
-            'nom' => $request->getParam('nom'),
             'password' => password_hash($request->getParam('password'), PASSWORD_DEFAULT),
+            'nom' => $request->getParam('nom'),
+            'prenom' => $request->getParam('prenom'),
+            'ville' => $request->getParam('ville'),
+            'service' => $request->getParam('service'),
+            'color' => $request->getParam('color'),
+            'tel' => $request->getParam('tel'),
+            'gsm' => $request->getParam('gsm'),
         ]);
 
-        $this->logger->info("saving user ".$request->getParam('email'));
-        $this->flash->addMessage('info', 'You have been signed up');
+        $this->logger->info("Saving user ".$request->getParam('email'));
+        $this->flash->addMessage('info', "L'utilisateur a été créé avec succès, vous devrez lui transmettre ses indentifiants (email : <a href=\"mailto:".$request->getParam('email')."\">".$request->getParam('email')."</a>)");
 
-        $auth = $this->auth->attempt($user->email,$request->getParam('password'));
-
+        //$auth = $this->auth->attempt($user->email,$request->getParam('password'));
+        /*
         if (! $auth) {
-            $this->flash->addMessage('error', 'Could not sign you in with those details');
+            $this->flash->addMessage('error', 'Impossible de se connecter avec ces informations');
+        }
+        */
+
+        return $response->withRedirect($this->router->pathFor('home'));
+    }
+
+    public function getChangeInfos($request, $response)
+    {
+        return $this->view->render($response, 'auth/card/change_infos.twig');
+    }
+
+    public function postChangeInfos($request, $response)
+    {
+        $validation = $this->validator->validate($request, [
+            //'email' => v::noWhitespace()->notEmpty()->email()->emailAvailable(),
+            'nom' => v::notEmpty()->alpha(),
+            'prenom' => v::notEmpty()->alpha(),
+            'ville' => v::notEmpty()->alpha(),
+            'tel' => v::optional(v::noWhitespace()->phone()), // optionnel mais doit etre valide
+            'gsm' => v::optional(v::noWhitespace()->phone()), // optionnel mais doit etre valide
+        ]);
+
+
+        if ($validation->failed()) {
+            return $response->withRedirect($this->router->pathFor('auth.infos.change'));
         }
 
+        $user =  $this->auth->user();
+        $majUser = User::where('id', $user->id)->update([
+                'nom' => $request->getParam('nom'),
+                'prenom' => $request->getParam('prenom'),
+                'ville' => $request->getParam('ville'),
+                'service' => $request->getParam('service'),
+                'color' => $request->getParam('color'),
+                'tel' => $request->getParam('tel'),
+                'gsm' => $request->getParam('gsm'),
+            ]);
+
+        if(!$majUser) {
+            $this->flash->addMessage('error', 'Impossible de changer vos informations');
+            return $response->withRedirect($this->router->pathFor('auth.infos.change'));
+        }
+        // on pourrait aussi proprement passer ca au accesseurs ...
+        // exemple : $this->auth->user()->setPassword($request->getParam('password'));
+
+        $this->flash->addMessage('info', "Vos données ont été mises à jour avec succès");
         return $response->withRedirect($this->router->pathFor('home'));
     }
 }
