@@ -71,7 +71,7 @@ class CalendarController extends Controller
         foreach ($EventTypes as $type) {
              $liste_type_event[$type->id] = [
                                                 "titre"=> $type->titre,
-                                                "description"=> $type->description,
+                                                "color"=> $type->color,
                                             ];
         }
 
@@ -99,8 +99,12 @@ class CalendarController extends Controller
                                     "voiture" => $voitureBoolean,
                                     "user_id" => $event->id_user,
                                     "user_initiales" => $user->macaron(),
-                                    "eventType_id" => $event->id_type,
-                                    "translated_eventType" => $liste_type_event[$event->id_type]['titre'],
+                                    "event_type" =>  [
+                                                                "id"=>$event->id_type,
+                                                                "translated_eventType" => $liste_type_event[$event->id_type]['titre'],
+                                                                "color" => $liste_type_event[$event->id_type]['color'],
+                                                            ],
+
             ];
         }
 

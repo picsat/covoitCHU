@@ -45,12 +45,12 @@
                                                 </a> #}
                                                 <div class="input-group input-group-sm">
                                                     <div class="input-group-prepend">
-                                                        <span class="input-group-text"><span class="badge badge-light">{{user.macaron()}}</span></span>
+                                                        <span class="input-group-text"><span class="badge badge-light">{{user_events[date|date("Ymd")].user_initiales}}</span></span>
                                                     </div>
                                                     <select name="sj{{ date|date("d") }}" id="sj{{ date|date("Ymd") }}" class="type_event form-control form-control-sm {% if (user_events[date|date("Ymd")] is defined) %}is-valid{% endif %}">
                                                             <option value=""></option>
                                                             {% for l,type in liste_type_event %}
-                                                            <option value="{{ l }}" {% if l is same as(user_events[date|date("Ymd")].eventType_id) %} selected="selected" {% endif %}> {{ type.titre }}</option>
+                                                            <option value="{{ l }}" {% if l is same as(user_events[date|date("Ymd")].event_type.id) %} selected="selected" {% endif %}> {{ type.titre }} </option>
                                                             {% endfor %}
                                                     </select>
 
