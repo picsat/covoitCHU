@@ -43,4 +43,5 @@ class Auth
     {
         unset($_SESSION['user']);
     }
+
 }

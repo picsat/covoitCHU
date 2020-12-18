@@ -13,6 +13,179 @@ use App\Auth\Auth;
  */
 class Calendar
 {
-    public $date_today = "156156";
+
+    public $month;
+    public $year;
+    public $months = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+    public $days = ['Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi','Dimanche'];
+
+   // public $user; // comme ca on a tout le temps au moins le user ?? a voir si on garde ou pas
+
+    public function __construct($month = null, $year = null)
+    {
+        /*
+        // on recupere le user de la session en cours
+        $user = new \App\Auth\Auth;
+        $user = $user->user();
+
+        if (! $user) {
+            throw new \Exception("Le calendrier ne peut etre affiché car vouc n'êtes pas connecté !");
+            return false;
+        }
+        $user->setPrenom($user->prenom);
+        $user->setNom($user->nom);
+        $user->setEmail($user->email);
+
+        $this->user = $user;
+    */
+        if($month === null || $month < 1 || $month > 12){
+            $month = intval(date('m'));
+        }
+
+        if($year === null){
+            $year = intval(date('Y'));
+        }
+
+        /*if($month < 1 || $month > 12){
+            throw new \Exception("Le mois $month n'est pas valide");
+        }*/
+/*
+        if($month < 1) {
+            $month = 12;
+        }
+
+         if($month > 12) {
+            $month = 1;
+        }
+
+        if($year < 1970 ){
+            throw new \Exception("L'année $year doit etre > 1970");
+        }*/
+
+        foreach (range(1, 12) as $number) {
+            $month_listing[$number] = $this->listingMonth[$number-1];
+        }
+
+        $this->date_today = date('d/m/Y');
+        $this->month = $month;
+        $this->year = $year;
+
+        /*$this->month_literal = $this->listingMonth;
+        $this->month_literal = $month_listing[$month];*/
+    }
+
+    /**
+     * Renvoie le Premier jour du mois
+     */
+    public function getFirstDay(): \DateTime
+    {
+        return new \DateTime("{$this->year}-{$this->month}-01");
+    }
+
+     /**
+     * Renvoie le Premier jour du mois
+     */
+    public function getLastDay(): \DateTime
+    {
+        $end = (clone $this->getFirstDay())->modify('+1 month -1 day');
+        return $end;
+    }
+
+
+    /**
+     * Retourne mois + année en tte lettre
+     */
+    public function toString() : string
+    {
+        return $this->months[$this->month - 1] . ' ' . $this->year;
+    }
+
+    /**
+     * Renvoie le nombre de semaine
+     */
+    public function getWeeks() : int
+    {
+        $start = $this->getFirstDay();
+        $end = $this->getLastDay();
+        $startWeek = intval($start->format('W'));
+        $endWeek = intval($end->format('W'));
+
+        if($endWeek === 1)
+        {
+            $endWeek = intval($end->modify('- 7 days')->format('W')) + 1;
+        }
+
+        if($startWeek > 52)
+        {
+            $startWeek = intval($start->modify('+ 7 days')->format('W')) - 1;
+        }
+
+        $weeks =   $endWeek - $startWeek + 1;
+
+        if($weeks < 0)
+        {
+            $weeks = intval($end->format('W'));
+        }
+
+        return $weeks;
+    }
+
+    /**
+     * Renvoi le numero de jour par rapport a la date du 01 dans le mois
+     * @ weeknum (int) : numero de la semaine dans le mois
+     * @ day (int) : numero du jour de la semaine.
+     */
+    public function getday(int $weekNum=0, int $numDay=0) : \DateTime
+    {
+
+        $last_monday = $this->getFirstDay()->modify("last monday");
+
+        // si on a le last monday qui vaut exatement -7j depuis un lundu 1er, il faut supprimer cette semaine "precedente"
+        if($last_monday = clone($this->getFirstDay()->modify("Monday this week -7 days"))) {
+            $last_monday = clone($this->getFirstDay()->modify("Monday this week"));
+        }
+
+        $week_days_cnt = count($this->days);
+        $weekNum = intval($weekNum);
+
+        $day = $last_monday->modify('+'. ($numDay + $weekNum * $week_days_cnt) .' days') ;
+
+        return $day;
+
+    }
+
+
+    public function withinMonth(\DateTime $date)
+    {
+
+        return $this->getFirstDay()->format('Y-m') === $date->format('Y-m');
+    }
+
+    public function nextMonth() : Calendar
+    {
+
+        $month = $this->month + 1;
+        $year = $this->year;
+
+        if($month > 12) {
+            $month = 1;
+            $year += 1;
+        }
+        return new Calendar($month, $year);
+    }
+
+    public function previousMonth() : Calendar
+    {
+
+        $month = $this->month - 1;
+        $year = $this->year;
+
+        if($month < 1) {
+            $month = 12;
+            $year -= 1;
+        }
+        return new Calendar($month, $year);
+    }
+
 
 }

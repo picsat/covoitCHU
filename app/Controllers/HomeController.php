@@ -3,6 +3,9 @@
 namespace App\Controllers;
 
 use App\Models\User;
+use App\Auth\Auth;
+use App\Controllers\Controller;
+use Illuminate\Database\Capsule\Manager as DB;
 
 /**
  * HomeController
@@ -12,8 +15,46 @@ use App\Models\User;
  */
 class HomeController extends Controller
 {
+
+
     public function index($request, $response, array $args)
     {
-        return $this->view->render($response,'home.twig', $args);
+        $current_month = intval(date('m'));
+        $current_year = intval(date('Y'));
+        $listing = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+        $month_listing = [];
+        $year_listing = [];
+
+        foreach (range(1, 12) as $number) {
+            $month_listing[$number] = $listing[$number-1];
+        }
+        foreach (range(-2, 20) as $number) {
+            $year_listing[$current_year+$number] = $current_year+$number;
+        }
+
+
+
+        /**
+         * Recup du user session auhtentifié
+         */
+
+        $user = $this->auth->user();
+        if($user){
+
+
+            $args['user'] = $user;
+        }
+
+        $pwd = password_hash('123123', PASSWORD_DEFAULT);
+        $args['pwd'] = $pwd;
+
+        $args['form_calendar']= [
+                                    "current_month"=>$current_month,
+                                    "current_year" =>$current_year,
+                                    "month_listing" => $month_listing,
+                                    "year_listing"=> $year_listing,
+                                ];
+
+        return $this->view->render($response,'home.twig', $args );
     }
 }

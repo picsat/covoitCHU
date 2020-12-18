@@ -1,0 +1,93 @@
+{% extends 'templates/app.twig' %}
+
+{% block content %}
+    <div class="content {{ _self.templateName|replace({'.twig':'', '/':'_'}) }}">
+        {% if auth.check %}
+            <div class="card">
+              <div class="card-body">
+                    <div class="col-lg-10 col-sm-12 offset-lg-1">
+                        <div class="d-flex flex-row align-items-center justify-content-between ">
+                        {# nb semaines : {{calendrier.getWeeks()}} #}
+                            <h2 class="mb-4 text-center card-title  ">Calendrier Global : {{ calendrier.toString() }} </h2>
+                            <div class="navigation btn-group ">
+                                <a href="{{  path_for('calendar.forall', { 'month': calendrier.previousMonth().month , 'year': calendrier.previousMonth().year})  }}" class="btn btn-primary btn-sm" >&lt;</a>
+                                <a href="{{  path_for('calendar.forall', { 'month': calendrier.nextMonth().month , 'year': calendrier.nextMonth().year})  }}" class="btn btn-primary btn-sm " >&gt;</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="calendrier col-lg-10 col-sm-12 offset-lg-1 mh-75 {{ 'nb_weeks_' ~ calendrier.getWeeks() }}">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-bordered table-hover table-sm ">
+                                <caption>Listes des utilisateurs</caption>
+                                <thead class="thead-dark">
+                                <th scope="col"><span class="d-block p-1 text-center text-muted">#Nom</span></th>
+                                 {% for w, week in 0..calendrier.getWeeks()-1 %}
+                                    {% for k, day in calendrier.days %}
+                                        {% set date = calendrier.getday(loop.parent.w,k) %}
+                                            {% if calendrier.withinMonth(date) %}
+                                                <th scope="col"><span class="d-block p-1 text-center text-muted">{{ day|first|upper }}</span><span class="d-block p-1 text-center {{ (date|date("d/m/Y") is same as (calendrier.date_today)) ? "today" : "" }}">{{ date|date("d") }}</span></th>
+                                            {% endif %}
+                                    {% endfor %}
+                                {% endfor %}
+                                </thead>
+                                <tbody>
+                                    {% for u, user_cal in user_events %}
+                                        <tr class="{% if user_cal.is_active%} table-warning{% endif %}">
+                                            <th scope="row" >
+                                                <div class="col-sm d-sm-inline-block text-left p-0">
+                                                        <button type="button" class=" btn btn-light btn-sm text-justify d-md-inline-block" data-toggle="modal" data-target="#userinfo{{user_cal.id}}">
+                                                            <i class="far fa-address-card"></i>
+                                                            <span data-toggle="tooltip"  data-placement="right" title="{{user_cal.prenom}} {{user_cal.nom}}" class="badge badge-light text-white text-right" style="background-color:{{user_cal.color}};">{{user_cal.macaron}}</span>
+                                                            <span class="d-none d-md-inline-block text-nowrap text-capitalize ">{{user_cal.nom}} {{user_cal.prenom}}</span>
+                                                        </button>
+                                                </div>
+                                            </th>
+                                            {% for w, week in 0..calendrier.getWeeks()-1 %}
+                                                {% for k, day in calendrier.days %}
+                                                    {% set date = calendrier.getday(loop.parent.w,k) %}
+                                                        {% if calendrier.withinMonth(date) %}
+                                                            <td class="text-center align-middle {{ (date|date("d/m/Y") is same as (calendrier.date_today)) ? "today" : "" }}">
+                                                                    {% if user_cal[date|date("Ymd")]|length > 0 %}
+                                                                        <span class="badge badge-pill text-white bg-dark" style="background-color:{{user_cal[date|date("Ymd")].event_type.color}}!important;">{{ user_cal[date|date("Ymd")].event_type.translated_eventType }} {% if user_cal[date|date("Ymd")].voiture %}<br/><i class="fa-sm fas fa-car "></i>{% endif %}</span>
+                                                                    {% endif %}
+                                                            </td>
+                                                        {% endif %}
+                                                {% endfor %}
+                                            {% endfor %}
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                {% for u, user_cal in user_events %}
+                    <div class="modal fade" id="userinfo{{user_cal.id}}" tabindex="{{loop.index}}" aria-labelledby="userinfo" aria-hidden="true">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">{{user_cal.nom}} {{user_cal.prenom}}</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
+                          <div class="modal-body ">
+                            <div class="text-center mb-4 pb-3 border border-left-0 border-right-0 border-top-0">
+                                <span class="user_macaron m-0" style="font-size:1.2rem;background-color:{{user_cal.color}};;">{{ user_cal.macaron }}</span>&nbsp;<i style="color:{{user_cal.color}};" class="align-middle fas fa-address-card fa-5x"></i>
+                            </div>
+                            <ul class="list-group">
+                                <li class="list-group-item"> Contacter par Email : <a href="mailto:{{user_cal.email}}" class="btn btn-sm btn-primary"/><i class="fas fa-envelope"></i></a></li>
+                                <li class="list-group-item"><i class="fas fa-map-marker-alt"></i> Ville : {{user_cal.ville}}</li>
+                                <li class="list-group-item"><i class="fas fa-id-badge"></i> Service : {{user_cal.service}}</li>
+                                <li class="list-group-item"><i class="fas fa-phone"></i> Téléphone : {{user_cal.tel}}</li>
+                                <li class="list-group-item"><i class="fas fa-mobile-alt"></i> Portable : {{user_cal.gsm}}</li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                {% endfor %}
+        {% else %}
+
+        {% endif %}
+    </div>
+{% endblock %}

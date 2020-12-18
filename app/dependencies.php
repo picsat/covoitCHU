@@ -40,31 +40,7 @@ return function (App $app) {
     };
 
 
-    /* TWIG */
-    $container['view'] = function ($c) {
-        $settings = $c->get('settings');
-        $view = new \Slim\Views\Twig($settings['view']['template_path'], $settings['view']['twig']);
 
-        // Ajout d'extensions
-        $view->addExtension(new Slim\Views\TwigExtension($c->get('router'), $c->get('request')->getUri()));
-        $view->addExtension(new Twig_Extension_Debug());
-
-        // Variables Twig globales
-        $twig = $view->getEnvironment();
-        $twig->addGlobal('application', [
-                            'appId' => $settings['appli'],
-                            'name' => $settings['appNom'],
-                            'version' => $settings['version'],
-                            'author' => $settings['createur'],
-                        ]);
-        $twig->addGlobal('auth', [
-                            'check' => $c->auth->check(),
-                            'user' => $c->auth->user()
-                        ]);
-        $twig->addGlobal('flash', $c->flash);
-
-        return $view;
-    };
 
 
     // --------------------
@@ -87,23 +63,54 @@ return function (App $app) {
         return new \App\Controllers\Auth\PasswordController($container);
     };
 
+    $container['csrf'] = function($container) {
+        $guard= new \Slim\Csrf\Guard;
+        $guard->setPersistentTokenMode(true);
+        return $guard;
+    };
 
     $container['CalendarController'] = function($container) {
         return new \App\Controllers\Calendar\CalendarController($container);
     };
 
-    $container['csrf'] = function($container) {
-        return new \Slim\Csrf\Guard;
-    };
+
 
 /// .............................??????????????????????????????????????????
-    $container['UserController'] = function ($c) {
+    $container['UserController'] = function ($container) {
 
-        $view = new \App\Controllers\UserController($c->get('view'), $c->get('logger'), $c->get('settings'));
+        $view = new \App\Controllers\UserController($container);
         return $view ;
     };
 
 
+
+    /* TWIG */
+    $container['view'] = function ($c) {
+        $settings = $c->get('settings');
+        $view = new \Slim\Views\Twig($settings['view']['template_path'], $settings['view']['twig']);
+
+        // Ajout d'extensions
+        $view->addExtension(new Slim\Views\TwigExtension($c->get('router'), $c->get('request')->getUri()));
+        $view->addExtension(new Twig_Extension_Debug());
+
+
+        // Variables Twig globales
+        $twig = $view->getEnvironment();
+        $twig->addGlobal('application', [
+                            'appId' => $settings['appli'],
+                            'name' => $settings['appNom'],
+                            'version' => $settings['version'],
+                            'author' => $settings['createur'],
+                        ]);
+        $twig->addGlobal('auth', [
+                            'check' => $c->auth->check(),
+                            'user' => $c->auth->user()
+                        ]);
+        //$twig->addGlobal('toto', $c->get(toto));
+        $twig->addGlobal('flash', $c->flash);
+
+        return $view;
+    };
 
 
 

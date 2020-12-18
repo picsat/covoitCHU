@@ -1,0 +1,172 @@
+{% extends 'templates/app.twig' %}
+
+{% block content %}
+     <div class="content {{ _self.templateName|replace({'.twig':'', '/':'_'}) }}">
+        {% if auth.check %}
+            <div class="card">
+              <div class="card-body">
+                    <div class="col-lg-10 col-sm-12 offset-lg-1">
+                        <div class="d-flex flex-row align-items-center justify-content-between col-sm3">
+                            <h2 class="mb-4 text-center card-title">{{ user.getFullNom() }} : {{ calendrier.toString() }}</h2>
+                            <div class="navigation">
+                                <a href="{{  path_for('calendar.general', { 'month': calendrier.previousMonth().month , 'year': calendrier.previousMonth().year})  }}" class="btn btn-primary" >&lt;</a>
+                                <a href="{{  path_for('calendar.general', { 'month': calendrier.nextMonth().month , 'year': calendrier.nextMonth().year})  }}" class="btn btn-primary" >&gt;</a>
+                            </div>
+                        </div>
+                    </div>
+                <form id="getCalendar" name="getCalendar" method="post" action="{{ path_for('calendar.update') }}">
+                    <div class="calendrier col-lg-10 col-sm-12 offset-lg-1 mh-75 {{ 'nb_weeks_' ~ calendrier.getWeeks() }}">
+                        <header>
+                            <div class="row d-none d-sm-flex p-1 bg-dark text-white">
+                                {% for k, day in calendrier.days %}
+                                <h3 class="col-sm p-1 text-center">{{ day }}</h3>
+                                {% endfor %}
+                            </div>
+                        </header>
+                        <div class="row border border-right-0 border-bottom-0">
+                            {% for w, week in 0..calendrier.getWeeks()-1 %}
+                                {% for k, day in calendrier.days %}
+                                    {% set date = calendrier.getday(loop.parent.w,k) %}
+                                    <div class="day col-sm p-2 border border-left-0 border-top-0 text-truncate {{ (date|date("d/m/Y") is same as (calendrier.date_today)) ? "today text-white" : "" }}  {{ calendrier.withinMonth(date)  ? '' : 'bg-light text-muted' }}"> <!-- d-none d-sm-inline-block bg-light text-muted -->
+                                        <h5 class="row align-items-center">
+                                            <span class="date col-1">{{ date|date("d") }}</span>
+                                            <span class="col-1"></span>
+                                            <small class="col d-sm-none text-center text-muted">{{ day }}</small>
+                                        </h5>
+                                        {% if calendrier.withinMonth(date) %}
+                                                <div class="input-group input-group-sm">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text"><span class="badge badge-light">{{user_events[date|date("Ymd")].user_initiales}}</span></span>
+                                                    </div>
+                                                    <select name="sj{{ date|date("d") }}" id="sj{{ date|date("Ymd") }}" class="type_event form-control form-control-sm {% if (user_events[date|date("Ymd")] is defined) %}is-valid{% endif %}">
+                                                            <option value=""></option>
+                                                            {% for l,type in liste_type_event %}
+                                                            <option value="{{ l }}" {% if l is same as(user_events[date|date("Ymd")].event_type.id) %} selected="selected" {% endif %}> {{ type.titre }} </option>
+                                                            {% endfor %}
+                                                    </select>
+                                                    <div class="input-group-append align-middle ">
+                                                        <div class="input-group-text {% if user_events[date|date("Ymd")].voiture %} checked-success {% endif %}">
+                                                            <label for="voiture_sj{{ date|date("d") }}" class="mb-0" ><i class="mr-1 fas fa-car "></i></label>
+                                                            <input class="opt_voiture checkbox" type="checkbox" id="voiture_sj{{ date|date("d") }}" name="voiture_sj{{ date|date("d") }}" aria-label="Checkbox voiture" {% if user_events[date|date("Ymd")].voiture %} checked="checked" {% endif %}/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                        {% endif %}
+                                    </div>
+                                {% endfor %}
+                                <div class="w-100"></div>
+                            {% endfor %}
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-lg-12">
+                                <button class="btn btn-dark btn-sm float-right" type="submit">Mettre à jour</button>
+                            </div>
+                        </div>
+                    </div>
+                    {{ csrf.field | raw }}
+                    <input type="hidden" name="selMois" id="selMois" value="{{ calendrier.month }}">
+                    <input type="hidden" name="selAnnee" id="selAnnee" value="{{ calendrier.year }}">
+                </form>
+              </div>
+            </div>
+        {% else %}
+
+        {% endif %}
+    </div>
+
+    <script>
+    $(document).ready(function()
+    {
+        $(".opt_voiture.checkbox").on("change", function()
+        {
+            $(this).closest(".input-group-append").find(".input-group-text").toggleClass('checked-success');
+            check_verif($(this));
+        });
+
+        $("select.type_event").each(function(){
+
+            var selected = $(this).val();
+            if(selected){
+                console.log($(this).attr('id') + " : " + selected);
+            }
+
+            $(this).on("change", function(){
+                var newselected = $(this).val();
+                console.log($(this).attr('id') + ": "+ selected + " -> " + newselected);
+
+                if(newselected == selected) {
+                    if(selected){
+                        $(this).addClass('is-valid');
+                        $(this).removeClass('is-changing is-invalid');
+                    } else {
+                        $(this).removeClass('is-valid is-changing is-invalid');
+                    }
+                }
+                else {
+                    $(this).addClass('is-changing');
+                    $(this).removeClass('is-valid is-invalid');
+                    if(!newselected){
+                        $(this).addClass('is-invalid');
+                        $(this).removeClass('is-valid is-changing');
+                        $(this).closest(".input-group").find(".input-group-text").removeClass('checked-success').find('.opt_voiture.checkbox').prop("checked", false);
+                    }
+                    //$(this).toggleClass('is-valid is-invalid');
+                }
+            });
+        });
+
+        // UPDATE du calendrier en Ajax si on navigue sans submit :)
+        $(".navigation a").on("click", function(e){
+            e.preventDefault();
+            e.stopPropagation();
+            var href = $(this).attr("href");
+            var checkVal = new Array();
+
+            $('.input-group').find('select.type_event').each(function () {
+                var selId = $(this).attr('id');
+                if(($(this).prop('required')) && (!$(this).val()))
+                {
+                    //console.log("error field " + selId);
+                    checkVal.push(selId);
+                }
+            })
+
+            if(!$('#getCalendar')[0].checkValidity()) {
+                console.log('errors checkValidity()');
+                console.log(checkVal);
+                $('#getCalendar').find(':submit').click(); //histoire de faire remonter la non conformité du form
+                //console.log('submit calendar :' + $('#getCalendar')[0].checkValidity());
+            }
+            else
+            {
+                $.ajax({
+                    url: "{{ path_for('calendar.update') }}",
+                    type: 'POST',
+                    data: $('form#getCalendar').serialize(),
+                    success: function (response) {
+                        console.log('it worked!'+ response );
+                        window.location.href = href;
+                    },
+                    error: function(xhr, status, error) {
+                        var err = xhr.responseText;
+                        console.log('it failed!\n'+ err.Message);
+                    }
+               });
+            }
+        });
+    });
+
+    function check_verif(cb) {
+        if((cb.is(":checked")) && (!cb.closest('.input-group').find('select.type_event').val())){
+            //.prop("checked", checked);
+            cb.closest('.input-group').find('select.type_event').attr('required',"required");
+
+        }
+        if((!cb.is(":checked")) && (!cb.closest('.input-group').find('select.type_event').val())){
+            //.prop("checked", checked);
+            cb.closest('.input-group').find('select.type_event').attr('required', false);
+            cb.removeClass('checked-success');
+        }
+    };
+    </script>
+{% endblock %}

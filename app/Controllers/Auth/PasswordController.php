@@ -23,7 +23,7 @@ class PasswordController extends Controller
     {
         $validation = $this->validator->validate($request, [
             'password_old' => v::noWhitespace()->notEmpty()->matchesPassword($this->auth->user()->password),
-            'password' => v::noWhitespace()->notEmpty(),
+            'password' => v::noWhitespace()->notEmpty()->length(6),
         ]);
 
         if ($validation->failed()) {
@@ -32,9 +32,11 @@ class PasswordController extends Controller
 
         $this->auth->user()->setPassword($request->getParam('password'));
 
-        $this->flash->addMessage('info', 'Your password was changed');
+        $this->flash->addMessage('info', 'Vous avez modifié votre mot de passe avec succès. (ne l\'oubliez pas ;) )');
 
         return $response->withRedirect($this->router->pathFor('home'));
 
     }
+
+
 }
