@@ -4,13 +4,12 @@ return [
 
         // Données globales d'application
         'chemin' => __DIR__,
-        'appNom' => 'covoit-CHU',
+        'appNom' => 'Covoit-CHU',
         'appli'=>'covoitchu',
-        'url'=>'http://covoit-chu',
-        'chem'=>'/projets/www.covoit-chu.picsat.fr',
-        'version'=>'v0.1',
+        'url'=>'http://www.covoit-chu.picsat.fr',
+        'chem'=>'/projets/covoitCHU',
+        'version'=>'v1.0',
         'createur'=>'Picsat.fr',
-
 
 
         'displayErrorDetails' => false, // set to false in production
@@ -21,7 +20,7 @@ return [
         'view' => [
             'template_path' => __DIR__ . '/views',
             'twig' => [
-                'cache' => __DIR__ . '/../cache/twig', //false,
+                'cache' => __DIR__ . '/../cache/twig',
                 'debug' => true,
                 'auto_reload' => true
             ],
@@ -34,17 +33,18 @@ return [
             'level' => \Monolog\Logger::DEBUG,
         ],
 
-        // Config ELLOQUENT DB
-         'db' => [
+        // Config PROD DB
+        'db' => [
                 'driver' => 'mysql',
                 'host' => 'picsatcovoitchu.mysql.db',
                 'port'      => 3306,
                 'database' => 'picsatcovoitchu',
                 'username' => 'picsatcovoitchu',
-                'password' => '*******',
+                'password' => 'p1c5atc0v01tCHU',
                 'charset'   => 'utf8',
                 'collation' => 'utf8_unicode_ci',
                 'prefix'    => '',
-            ]
+        ],
     ],
 ];
+
