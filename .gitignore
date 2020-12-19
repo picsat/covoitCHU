@@ -1,4 +1,3 @@
-/app/settings.php
 /vendor/
 /logs/*
 !/logs/README.md
