@@ -1,8 +1,19 @@
-# Slim Framework 3 Skeleton Application
+# Covoit CHU Calendar App basée sur Slim Framework 3 Skeleton Application
 
-Use this skeleton application to quickly setup and start working on a new Slim Framework 3 application. This application uses the latest Slim 3 with the PHP-View template renderer. It also uses the Monolog logger.
+Cette application fournit un outil simple et rapide aux membres du personnel du CHU habitant dans la région Clermontaise de l'Hérault permettant :
 
-This skeleton application was built for Composer. This makes setting up a new Slim Framework application quick and easy.
+* la continuité d'un service devenu obsolète (arrêt prévu décembre 2020)
+* l'inscription par invitation ds membre uniquement
+
+L'application a été réalisée dans le but d'apréhender plusieurs notions :
+
+* Slim Framework 3
+* L'autentification via le skeleton modifié slim-born de @HavenShen (https://github.com/HavenShen/slim-born)
+* ORM Elloquent
+* Structure MVC
+* Utilisation de CSRF sur les formulaires
+* Utilisation de Twig, twig-view
+* Utilisation de Bootstrap 4
 
 ## Install the Application
 
