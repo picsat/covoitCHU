@@ -33,6 +33,9 @@ class Auth
 
         if (password_verify($password, $user->password)) {
             $_SESSION['user'] = $user->id;
+            // on parse proprement
+            $user->setLastConnexion(date("Y-m-d H:i:s"));
+
             return true;
         }
 

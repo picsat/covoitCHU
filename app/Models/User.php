@@ -34,6 +34,7 @@ class User extends Model
         'tel',
         'gsm',
         'password',
+        'last_connection',
     ];
 
     /*
@@ -49,6 +50,13 @@ class User extends Model
     {
         $this->update([
             'password' => password_hash($password, PASSWORD_DEFAULT)
+        ]);
+    }
+
+    public function setLastConnexion($date)
+    {
+        $this->update([
+            'last_connection' => $date
         ]);
     }
 

@@ -73,7 +73,7 @@
             <div class="card border-0">
                 <div class="row d-flex">
                     <div class="col-md-5 offset-md-1 col-sm-4 offset-sm-4">
-                         <div class="card d-sm-none d-md-block border-0">
+                         <div class="card d-none d-md-block border-0">
                             <div class="card-body p-0">
                                 <div class="row justify-content-center align-middle border-line"> <img src="/assets/img/carpool.svg" class="img-fluid rounded image"> </div>
                             </div>
@@ -99,7 +99,9 @@
                                             <span class="hel-block">{{ errors.password | first }}</span>
                                             {% endif %}
                                         </div>
-                                        <button type="submit" class="btn btn-default">Sign In</button>
+                                        <div class="text-right">
+                                            <button type="submit" class="btn btn-primary">Valider</button>
+                                        </div>
                                         {{ csrf.field | raw }}
                                     </form>
                                 </div>
